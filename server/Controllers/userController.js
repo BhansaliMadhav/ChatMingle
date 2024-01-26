@@ -1,10 +1,15 @@
-const { users } = require('./user');
-const speakeasy = require('speakeasy');
+import User from '../Models/User.js';
+import speakeasy from 'speakeasy';
+import QRCode from 'qrcode';
 
-const login = (req, res) => {
+export const login = (req, res) => {
   const { email, password, token } = req.body;
   // Find the user with the given email address
-  const user = users.find(u => u.email === email);
+  const user = User.find({
+    email: email
+  }
+    
+  );
   // Validate the user's credentials
   if (!user || user.password !== password) {
     return res.status(401).send('Invalid credentials');
@@ -23,4 +28,20 @@ const login = (req, res) => {
   res.send('Login successful');
 };
 
-module.exports = { login };
+export const register = (req, res) => {
+    const { name, email, password } = req.body;
+    // Generate a new secret key for the user
+    const secret = speakeasy.generateSecret({ length: 20 });
+    // Save the user data in the database
+    const user = new User(name, email, password, secret.base32);
+    User.push(user);
+    // Generate a QR code for the user to scan
+    QRCode.toDataURL(secret.otpauth_url, (err, image_data) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Internal Server Error');
+      }
+      // Send the QR code to the user
+      res.send({ qrCode: image_data });
+    });
+  };

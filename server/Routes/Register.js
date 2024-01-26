@@ -7,7 +7,7 @@ app.post('/register', (req, res) => {
   // Generate a new secret key for the user
   const secret = speakeasy.generateSecret({ length: 20 });
   // Save the user data in the database
-  const user = new User(users.length + 1, name, email, password, secret.base32);
+  const user = new User(name, email, password, secret.base32, fingerprint);
   users.push(user);
   // Generate a QR code for the user to scan
   QRCode.toDataURL(secret.otpauth_url, (err, image_data) => {

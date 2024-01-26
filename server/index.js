@@ -5,7 +5,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import helmet from "helmet";
 import morgan from "morgan";
-import Login from "./Routes/Login";
+import Login from "./Routes/Login.js";
 
 //Configuration
 dotenv.config();
