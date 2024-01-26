@@ -107,7 +107,7 @@ const Login = () => {
       )} */}
 
       <Box mt={"3rem"}>
-        <form onSubmit={Login}>
+        <form onSubmit={!!activeButton ? Signin : Login}>
           <Box width={"100%"} display={"flex"} justifyContent={"center"}>
             <Box
               gap="30px"
@@ -139,7 +139,7 @@ const Login = () => {
                   fullWidth
                   variant="filled"
                   type="text"
-                  label="User Id"
+                  label="Username"
                   onChange={(e) => setName(e.target.value)}
                   name="firstName"
                   sx={{ margin: "1rem 0" }}
@@ -151,7 +151,7 @@ const Login = () => {
                 fullWidth
                 variant="filled"
                 type="text"
-                label="User Id"
+                label="Email Id"
                 onChange={(e) => setUserId(e.target.value)}
                 name="firstName"
                 sx={{ margin: "1rem 0" }}
