@@ -5,6 +5,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import helmet from "helmet";
 import morgan from "morgan";
+import Login from "./Routes/Login";
 
 //Configuration
 dotenv.config();
@@ -17,6 +18,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
+
+app.use('/user', Login);
 // Mongoose Setup
 const PORT = process.env.PORT || 9000;
 mongoose
