@@ -32,7 +32,7 @@ const TOTP = () => {
       localStorage.setItem("token", data.user);
       // alert("Login Successful");
       console.log("triggered success");
-      navigate("/admin-controls");
+      navigate("/done");
     } else {
       console.log("triggered failure");
       alert("Please Check your userId and password");
