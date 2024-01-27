@@ -81,11 +81,11 @@ const Login = () => {
       }
     );
     const data = await response.json();
-    if (data.user) {
-      localStorage.setItem("token", data.user);
+    if (data.qrCode) {
+      localStorage.setItem("qr", data.qrCode);
       // alert("Login Successful");
       console.log("triggered success");
-      navigate("/admin-controls");
+      navigate("/2faQR");
     } else {
       console.log("triggered failure");
       alert("Please Check your userId and password");
