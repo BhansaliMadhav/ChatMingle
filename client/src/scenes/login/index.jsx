@@ -17,7 +17,6 @@ function MyComponent() {
   useEffect(() => {
     const client = new ClientJS();
     fingerprint = client.getFingerprint();
-    console.log("Fingerprint from admin login page", fingerprint);
   }, []);
 }
 const Login = () => {
@@ -39,7 +38,6 @@ const Login = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${process.env.REACT_APP_AdminApiKey}`,
         },
 
         body: JSON.stringify({
@@ -50,11 +48,11 @@ const Login = () => {
       }
     );
     const data = await response.json();
-    if (data.user) {
-      localStorage.setItem("token", data.user);
+    if (data.userId) {
+      localStorage.setItem("userId", data.userId);
       // alert("Login Successful");
       console.log("triggered success");
-      navigate("/admin-controls");
+      navigate("/totp");
     } else {
       console.log("triggered failure");
       alert("Please Check your userId and password");
@@ -69,7 +67,6 @@ const Login = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${process.env.REACT_APP_AdminApiKey}`,
         },
 
         body: JSON.stringify({
