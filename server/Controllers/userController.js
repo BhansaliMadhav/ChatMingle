@@ -4,28 +4,33 @@ import QRCode from "qrcode";
 import bcryptjs from "bcryptjs";
 
 export const login = async (req, res) => {
-  const { email, password, token } = req.body;
+  const { email, password } = req.body;
   // Find the user with the given email address
   const user = User.find({
-    email: email,
+    userId: email,
   });
   const encryptedPassword = await bcryptjs.hash(password, 10);
   // Validate the user's credentials
   if (!user || user.password !== encryptedPassword) {
     return res.status(401).send("Invalid credentials");
-  }
-  // Verify the user's token
-  const verified = speakeasy.totp.verify({
-    secret: user.secret,
-    encoding: "base32",
-    token,
-    window: 1,
+  } 
+  // User is authenticated
+  res.status(200).send({
+    userId : user.userId
   });
+};
+export const verify = async (req, res) => {
+  const { token, userId } = req.body;
+  //userIdToFind 
+  const user = await User.findOne({ userId: userId });
+  const base32secret = user.secret
+  // Verify the user's token
+  var verified = speakeasy.totp.verify({ secret: base32secret,
+    encoding: 'base32',
+    token });
   if (!verified) {
     return res.status(401).send("Invalid token");
   }
-  // User is authenticated
-  res.send("Login successful");
 };
 
 export const register = async (req, res) => {
@@ -33,6 +38,7 @@ export const register = async (req, res) => {
   console.log(name);
   // Generate a new secret key for the user
   const secret = speakeasy.generateSecret({ length: 20 });
+  
   const encryptedPassword = await bcryptjs.hash(password, 10);
   // Save the user data in the database
   const user = await User.create({
@@ -42,7 +48,7 @@ export const register = async (req, res) => {
     secret: secret.base32,
     fingerprint,
   });
-  // User.add(user);
+  
   // Generate a QR code for the user to scan
   QRCode.toDataURL(secret.otpauth_url, (err, image_data) => {
     if (err) {

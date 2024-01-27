@@ -1,5 +1,5 @@
 import express from 'express';
-import { login, register } from '../Controllers/userController.js';
+import { login, register, verify } from '../Controllers/userController.js';
 const router = express.Router();
 
 router.post('/login', login, (req, res) => {
@@ -7,5 +7,7 @@ router.post('/login', login, (req, res) => {
   res.send('Protected resource accessed successfully');
 });
 router.post('/register', register);
+
+router.post('/login/totp', verify);
 
 export default router;
