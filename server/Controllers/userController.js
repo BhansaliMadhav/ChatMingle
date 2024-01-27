@@ -6,22 +6,32 @@ import bcryptjs from "bcryptjs";
 export const login = async (req, res) => {
   const { email, password } = req.body;
   // Find the user with the given email address
-  const user = User.find({
+ 
+  const user = await User.findOne({
     userId: email,
   });
-  const encryptedPassword = await bcryptjs.hash(password, 10);
+  
+  // const encryptedPassword = await bcryptjs.hash(password, 10);
+  // console.log(encryptedPassword);
   // Validate the user's credentials
-  if (!user || user.password !== encryptedPassword) {
+
+  const isPasswordValid = await bcryptjs.compare(
+    password,
+    user.password
+  );
+  console.log(isPasswordValid);
+  if (!isPasswordValid) {
     return res.status(401).send("Invalid credentials");
   } 
   // User is authenticated
-  res.status(200).send({
+  else { res.status(200).send({
     userId : user.userId
   });
+  }
 };
 export const verify = async (req, res) => {
   const { token, userId } = req.body;
-  //userIdToFind 
+  console.log(token)
   const user = await User.findOne({ userId: userId });
   const base32secret = user.secret
   // Verify the user's token

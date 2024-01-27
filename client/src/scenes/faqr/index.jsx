@@ -35,18 +35,23 @@ const QRFA = () => {
           src={`${qr}`}
           alt=""
         />
+        <form>
         <Button
           onClick={(event) => {
             navigate("/login");
           }}
+          type = "submit"
           sx={{
             margin: "2rem auto",
             display: "block",
             backgroundColor: `${colors.greenAccent[500]}`,
+            "&:hover": { backgroundColor: `${colors.greenAccent[500]}`},
           }}
         >
           Done
         </Button>
+        </form>
+        
       </Box>
     </Box>
   );

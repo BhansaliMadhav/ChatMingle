@@ -52,7 +52,7 @@ const Login = () => {
       localStorage.setItem("userId", data.userId);
       // alert("Login Successful");
       console.log("triggered success");
-      navigate("/totp");
+      navigate("/toptpVerification");
     } else {
       console.log("triggered failure");
       alert("Please Check your userId and password");
@@ -91,18 +91,6 @@ const Login = () => {
   }
   return (
     <Box m={isMobile ? "2vh 5vw" : "1.5rem 2.5rem"}>
-      {/* {isMobile ? (
-        <HeaderMobile
-          title={"Admin Login"}
-          subTitle={"Login to access Admin Previllages"}
-        />
-      ) : (
-        <HeaderNonMobile
-          title={"Admin Login"}
-          subTitle={"Login to access Admin Previllages"}
-        />
-      )} */}
-
       <Box mt={"3rem"}>
         <form onSubmit={!!activeButton ? Signin : Login}>
           <Box width={"100%"} display={"flex"} justifyContent={"center"}>

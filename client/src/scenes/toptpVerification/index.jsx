@@ -11,8 +11,12 @@ const TOTP = () => {
     }
   }, []);
   const [token, setToken] = useState("");
-  async function VerifyTotp(event) {
-    event.preventDefault();
+  useEffect(() => {
+    if (token.length === 6) {
+      VerifyTotp();
+    }
+  }, [token]);
+  async function VerifyTotp() {
     const response = await fetch(
       process.env.REACT_APP_BASE_URL + "/user/login/totp",
       {
@@ -57,9 +61,6 @@ const TOTP = () => {
             onChange={(e) => {
               e.target.value = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
               setToken(e.target.value);
-              if (e.target.value.length === 6) {
-                VerifyTotp();
-              }
             }}
             name="lastName"
             sx={{ margin: "1rem 0" }}
