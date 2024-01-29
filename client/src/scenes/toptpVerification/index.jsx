@@ -57,7 +57,7 @@ const TOTP = () => {
             fullWidth
             variant="filled"
             type="text"
-            label="Password"
+            label="Token"
             onChange={(e) => {
               e.target.value = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
               setToken(e.target.value);

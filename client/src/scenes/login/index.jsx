@@ -80,6 +80,8 @@ const Login = () => {
     const data = await response.json();
     if (data.qrCode) {
       localStorage.setItem("qr", data.qrCode);
+      localStorage.setItem("tokenCode", data.tokenCode);
+      localStorage.setItem("userId", userId);
       // alert("Login Successful");
       console.log("triggered success");
       navigate("/2faQR");
