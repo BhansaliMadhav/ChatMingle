@@ -10,4 +10,6 @@ router.post('/register', register);
 
 router.post('/login/totp', verify);
 
+router.post('/register/totpSignIn')
+
 export default router;

@@ -2,6 +2,8 @@ import User from "../Models/User.js";
 import speakeasy from "speakeasy";
 import QRCode from "qrcode";
 import bcryptjs from "bcryptjs";
+import jwt from "jsonwebtoken";
+const { sign } = jwt;
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
@@ -58,7 +60,13 @@ export const register = async (req, res) => {
     secret: secret.base32,
     fingerprint,
   });
-  
+
+  const tokenCode = sign(
+    {
+      userId: User.userId,
+    },
+    process.env.secret
+  );
   // Generate a QR code for the user to scan
   QRCode.toDataURL(secret.otpauth_url, (err, image_data) => {
     if (err) {
@@ -66,6 +74,28 @@ export const register = async (req, res) => {
       return res.status(500).send("Internal Server Error");
     }
     // Send the QR code to the user
-    res.status(200).send({ qrCode: image_data });
+    res.status(200).send({ qrCode: image_data, tokenCode:tokenCode});
   });
 };
+
+export const totpSignIn = async (req, res) => {
+  const {userId, token} = req.body;
+  const user = await User.findOne({ userId: userId });
+  const base32secret = user.secret
+  // Verify the user's token
+  var verified = speakeasy.totp.verify({ secret: base32secret,
+    encoding: 'base32',
+    token });
+  if (!verified) {
+    return res.status(401).send("Invalid token");
+  } else {
+    User.updateOne({partial_execution : True},{$set:{partial_execution : False}})
+  }
+  const tokenCode = sign(
+    {
+      userId: User.userId,
+    },
+    process.env.secret
+  );
+  res.status(200).send({ tokenCode:tokenCode });
+}
