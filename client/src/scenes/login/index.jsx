@@ -48,11 +48,21 @@ const Login = () => {
       }
     );
     const data = await response.json();
+    if (data.message === "Sign In Partially Executed") {
+      localStorage.setItem("qr", data.qrCode);
+      navigate("/2faQR");
+    }
     if (data.userId) {
-      localStorage.setItem("userId", data.userId);
-      // alert("Login Successful");
-      console.log("triggered success");
-      navigate("/toptpVerification");
+      try {
+        localStorage.setItem("userId", data.userId);
+        localStorage.setItem("tokenCode", data.tokenCode);
+        // alert("Login Successful");
+        console.log("triggered success");
+        navigate("/toptpVerification");
+      } catch {
+        alert("error");
+        navigate("/login");
+      }
     } else {
       console.log("triggered failure");
       alert("Please Check your userId and password");
