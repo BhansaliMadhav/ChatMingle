@@ -25,6 +25,12 @@ const User = new mongoose.Schema(
       type: Number,
       required: true,
     },
+
+    partial_execution : {
+      type: Boolean,
+      required: true,
+      default: true,
+    },
   },
   { timestamps: true, collection: "user-data" }
 );

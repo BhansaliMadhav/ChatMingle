@@ -43,7 +43,7 @@ const QRFA = () => {
       localStorage.setItem("tokenCode", data.tokenCode);
       // alert("Login Successful");
       console.log("triggered success");
-      navigate("/done");
+      navigate("/login");
     } else {
       console.log("triggered failure");
       alert("Please Check your userId and password");

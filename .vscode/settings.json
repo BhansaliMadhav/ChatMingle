@@ -1,3 +1,5 @@
 {
-  "window.zoomLevel": 0.75
+  "window.zoomLevel": 0.75,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
 }
