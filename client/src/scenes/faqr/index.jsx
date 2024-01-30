@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material";
 import { tokens } from "../../theme";
+import jwt from "jsonwebtoken";
 const QRFA = () => {
   const qr = localStorage.getItem("qr");
   const navigate = useNavigate();
@@ -10,9 +11,11 @@ const QRFA = () => {
   const colors = tokens(theme.palette.mode);
 
   const userId = localStorage.getItem("userId");
+  const tokenCode = localStorage.getItem("tokenCode");
   useEffect(() => {
     const userId = localStorage.getItem("userId");
-    if (!userId) {
+    const user = jwt.decode(tokenCode);
+    if (!userId || !user) {
       navigate("/login");
     }
   }, []);
