@@ -46,7 +46,7 @@ export const sendOTP = async (req, res) => {
 
 export const verifyOTP = async (req, res) => {
   const { email, otp } = req.body;
-  const user =await OTP.findOne({ otp: otp });
+  const user = await OTP.findOne({ otp: otp });
   console.log(user.otp);
   if (user && user.otp === otp) {
     await User.updateOne({ userId: email }, { otp_verification: true });

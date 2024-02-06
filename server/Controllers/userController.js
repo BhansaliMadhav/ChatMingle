@@ -12,32 +12,34 @@ export const login = async (req, res) => {
   const user = await User.findOne({
     userId: email,
   });
-
+  if (!user) {
+    return res.status(404).send({ message: "Invalid Emailid/password" });
+  }
   const isPasswordValid = await bcryptjs.compare(password, user.password);
   if (!isPasswordValid) {
     return res.status(401).send({ message: "Invalid credentials" });
   }
   // User is authenticated
   if (user.partial_execution === true) {
-    QRCode.toDataURL(secret.otpauth_url, (err, image_data) => {
+    QRCode.toDataURL(user.secret, (err, image_data) => {
       if (err) {
         console.error(err);
         return res.status(500).send("Internal Server Error");
       } else {
-        res
+        return res
           .status(201)
           .send({ qrCode: image_data, message: "Sign In Partially Executed" });
       }
     });
     const tokenCode = sign(
       {
-        userId: User.userId,
+        userId: user.userId,
       },
       process.env.SECRET
     );
-    res.status(200).send({
+    return res.status(200).send({
       userId: user.userId,
-      tokenCode
+      tokenCode,
     });
   }
 };
@@ -45,7 +47,7 @@ export const verify = async (req, res) => {
   const { token, userId } = req.body;
   console.log(token);
   const user = await User.findOne({ userId: userId });
-  
+
   const base32secret = user.secret;
   // Verify the user's token
   var verified = speakeasy.totp.verify({
@@ -55,8 +57,8 @@ export const verify = async (req, res) => {
   });
   if (!verified) {
     return res.status(401).send("Invalid token");
-  }else{
-    res.status(200).send({message:"Successfull"})
+  } else {
+    res.status(200).send({ message: "Successfull" });
   }
 };
 

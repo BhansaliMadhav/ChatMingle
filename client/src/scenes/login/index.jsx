@@ -65,7 +65,7 @@ const Login = () => {
       }
     } else {
       console.log("triggered failure");
-      alert("Please Check your userId and password");
+      alert(data.message);
     }
     // console.log(data);
   }
