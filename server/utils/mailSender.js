@@ -5,7 +5,7 @@ const mailSender = async (email, title, body) => {
   try {
     const ses = new aws.SES({
       apiVersion: "2010-12-01",
-      region: "us-east-1",
+      region: "ap-southeast-2",
       defaultProvider,
     });
     // Create a Transporter to send emails
@@ -14,7 +14,7 @@ const mailSender = async (email, title, body) => {
     });
     // Send emails to users
     let info = await transporter.sendMail({
-      from: "bhansalimadhav03@gmail.com",
+      from: process.env.FROM_EMAIL_ADDRESS,
       to: email,
       subject: title,
       html: body,
