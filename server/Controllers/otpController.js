@@ -46,9 +46,10 @@ export const sendOTP = async (req, res) => {
 
 export const verifyOTP = async (req, res) => {
   const { email, otp } = req.body;
-  const user = otpSchema.findOne({ email });
+  const user =await OTP.findOne({ otp: otp });
+  console.log(user.otp);
   if (user && user.otp === otp) {
-    User.updateOne({ userId: email }, { otp_verification: true });
+    await User.updateOne({ userId: email }, { otp_verification: true });
     res.status(200).send({ message: "Email verified successfully" });
   } else {
     res.status(401).send({ message: "email and / or password didnt match" });

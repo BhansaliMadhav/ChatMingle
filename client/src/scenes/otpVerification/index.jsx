@@ -13,7 +13,7 @@ const OtpVerify = () => {
   const [otp, setOtp] = useState("");
   useEffect(() => {
     if (otp.length === 6) {
-        OtpVerification();
+      OtpVerification();
     }
   }, [otp]);
   async function OtpVerification() {
@@ -26,14 +26,13 @@ const OtpVerify = () => {
         },
 
         body: JSON.stringify({
-          userId,
+          email: userId,
           otp,
         }),
       }
     );
     const data = await response.json();
     if (data.message === "Email verified successfully") {
-
       // alert("Login Successful");
       console.log("triggered success");
       navigate("/2faQR");

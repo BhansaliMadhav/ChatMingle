@@ -32,8 +32,8 @@ const TOTP = () => {
       }
     );
     const data = await response.json();
-    if (data.user) {
-      localStorage.setItem("token", data.user);
+    console.log(data.message);
+    if (data.message === "Successfull") {
       // alert("Login Successful");
       console.log("triggered success");
       navigate("/done");

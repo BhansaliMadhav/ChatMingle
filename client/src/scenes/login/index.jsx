@@ -94,6 +94,16 @@ const Login = () => {
       localStorage.setItem("userId", userId);
       // alert("Login Successful");
       console.log("triggered success");
+      fetch(process.env.REACT_APP_BASE_URL + "/signin/send-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          email: userId,
+        }),
+      });
       navigate("/otpVerification");
     } else {
       console.log("triggered failure");

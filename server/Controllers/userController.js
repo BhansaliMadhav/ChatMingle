@@ -33,7 +33,7 @@ export const login = async (req, res) => {
       {
         userId: User.userId,
       },
-      process.env.secret
+      process.env.SECRET
     );
     res.status(200).send({
       userId: user.userId,
@@ -45,6 +45,7 @@ export const verify = async (req, res) => {
   const { token, userId } = req.body;
   console.log(token);
   const user = await User.findOne({ userId: userId });
+  
   const base32secret = user.secret;
   // Verify the user's token
   var verified = speakeasy.totp.verify({
@@ -54,6 +55,8 @@ export const verify = async (req, res) => {
   });
   if (!verified) {
     return res.status(401).send("Invalid token");
+  }else{
+    res.status(200).send({message:"Successfull"})
   }
 };
 
@@ -77,7 +80,7 @@ export const register = async (req, res) => {
     {
       userId: User.userId,
     },
-    process.env.secret
+    process.env.SECRET
   );
   // Generate a QR code for the user to scan
   QRCode.toDataURL(secret.otpauth_url, (err, image_data) => {
@@ -113,7 +116,7 @@ export const totpSignIn = async (req, res) => {
     {
       userId: User.userId,
     },
-    process.env.secret
+    process.env.SECRET
   );
   res.status(200).send({ tokenCode: tokenCode });
 };
