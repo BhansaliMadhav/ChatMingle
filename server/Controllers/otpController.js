@@ -1,7 +1,7 @@
 // controllers/otpController.js
 import otpGenerator from "otp-generator";
 import otpSchema from "../Models/otpModel.js";
-import User from "../Models/otpModel.js";
+import User from "../Models/User.js";
 const OTP = otpSchema;
 export const sendOTP = async (req, res) => {
   try {
@@ -44,4 +44,13 @@ export const sendOTP = async (req, res) => {
   }
 };
 
-export default sendOTP;
+export const verifyOTP = async (req, res) => {
+  const { email, otp } = req.body;
+  const user = otpSchema.findOne({ email });
+  if (user && user.otp === otp) {
+    User.updateOne({ userId: email }, { otp_verification: true });
+    res.status(200).send({ message: "Email verified successfully" });
+  } else {
+    res.status(401).send({ message: "email and / or password didnt match" });
+  }
+};

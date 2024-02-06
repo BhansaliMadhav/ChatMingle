@@ -32,6 +32,11 @@ const User = new mongoose.Schema(
       required: true,
       default: true,
     },
+    otp_verification: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   { timestamps: true, collection: "user-data" }
 );
