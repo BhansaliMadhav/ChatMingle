@@ -94,7 +94,7 @@ const Login = () => {
       localStorage.setItem("userId", userId);
       // alert("Login Successful");
       console.log("triggered success");
-      navigate("/2faQR");
+      navigate("/otpVerification");
     } else {
       console.log("triggered failure");
       alert("Please Check your userId and password");

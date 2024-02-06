@@ -5,6 +5,7 @@ import Login from "./scenes/login";
 import QRFA from "./scenes/faqr";
 import TOTP from "./scenes/toptpVerification";
 import Done from "./scenes/done";
+import OtpVerify from "./scenes/otpVerification";
 function App() {
   const [theme, colorMode] = useMode();
 
@@ -19,6 +20,7 @@ function App() {
             <Route path="/2faQR" element={<QRFA />} />
             <Route path="/toptpVerification" element={<TOTP />} />
             <Route path="/done" element={<Done />} />
+            <Route path="/otpVerification" element={<OtpVerify />} />
           </Routes>
         </div>
       </ThemeProvider>
