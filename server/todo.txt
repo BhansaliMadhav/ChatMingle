@@ -1,0 +1,6 @@
+Tasks for the week
+
+1 all the user inout must be trimmed using .trim() this removes any irregular whitespace although the string remain unchanged
+2 implement otp verification for email address to not let fake email address be used to create userAccount
+3 implement chat mechanism
+4 implement chat encryption

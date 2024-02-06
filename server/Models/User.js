@@ -2,14 +2,15 @@ import mongoose from "mongoose";
 const User = new mongoose.Schema(
   {
     name: {
-        type: String,
-        required: true,
-
+      type: String,
+      required: true,
+      trim: true,
     },
     userId: {
       type: String,
       required: true,
       unique: true,
+      trim: true,
     },
     password: {
       type: String,
@@ -20,13 +21,13 @@ const User = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    
+
     fingerprint: {
       type: Number,
       required: true,
     },
 
-    partial_execution : {
+    partial_execution: {
       type: Boolean,
       required: true,
       default: true,
