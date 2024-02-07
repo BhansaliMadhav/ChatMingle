@@ -1,8 +1,10 @@
 import User from "../Models/User.js";
+import userKey from "../Models/userKey.js";
 import speakeasy from "speakeasy";
 import QRCode from "qrcode";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 const { sign } = jwt;
 
 export const login = async (req, res) => {
@@ -73,7 +75,7 @@ export const verify = async (req, res) => {
 
 export const register = async (req, res) => {
   const { name, email, password, fingerprint } = req.body;
-  console.log(name);
+  // console.log(name);
   // Generate a new secret key for the user
   const secret = speakeasy.generateSecret({ length: 20 });
 
@@ -89,15 +91,22 @@ export const register = async (req, res) => {
 
   const tokenCode = sign(
     {
-      userId: User.userId,
+      userId: user.userId,
     },
     process.env.SECRET
   );
   // Generate a QR code for the user to scan
-  QRCode.toDataURL(secret.otpauth_url, (err, image_data) => {
+  QRCode.toDataURL(secret.otpauth_url, async (err, image_data) => {
     if (err) {
       console.error(err);
       return res.status(500).send("Internal Server Error");
+    }
+    const secretKey = crypto.randomBytes(64).toString("base64");
+    if (secretKey){
+      await userKey.create({
+        userId: user.userId,
+        secretKey
+      })
     }
     // Send the QR code to the user
     res.status(200).send({ qrCode: image_data, tokenCode: tokenCode });

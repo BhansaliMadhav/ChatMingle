@@ -17,7 +17,7 @@ const ChatSchema = new mongoose.Schema(
       trim: true,
     },
     encryption_key: {
-      type: String,
+      type: Buffer,
       required: true,
       unique: true,
       trim: true,
@@ -27,7 +27,7 @@ const ChatSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    reciverId: { type: String, required: true, trim: true },
+    receiverId: { type: String, required: true, trim: true },
     message: [MessageSchema],
   },
   { timestamps: true, collection: "chat-data" }

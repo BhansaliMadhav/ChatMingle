@@ -15,6 +15,7 @@
   "dependencies": {
     "@aws-sdk/client-ses": "^3.504.0",
     "@aws-sdk/credential-provider-node": "^3.504.0",
+    "aes-js": "^3.1.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
