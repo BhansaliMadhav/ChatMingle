@@ -9,7 +9,7 @@ const MessageSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-const Chat = new mongoose.Schema(
+const ChatSchema = new mongoose.Schema(
   {
     id: {
       type: String,
@@ -25,16 +25,27 @@ const Chat = new mongoose.Schema(
     senderId: {
       type: String,
       required: true,
+      trim: true,
     },
-    reciverId: { type: String, required: true },
+    reciverId: { type: String, required: true, trim: true },
     message: [MessageSchema],
   },
   { timestamps: true, collection: "chat-data" }
 );
-ChatSchema.pre("save", function (next) {
-  this.messages.sort((a, b) => b.createdAt - a.createdAt);
+ChatSchema.pre("findOneAndUpdate", function (next) {
+  const update = this.getUpdate();
+  if (update.$addToSet && update.$addToSet.messages) {
+    // If there is an addToSet operation for messages array
+    const newMessage = update.$addToSet.messages;
+    // Update the document by prepending the new message to the array
+    this.update(
+      {},
+      { $addToSet: { messages: { $each: [newMessage], $position: 0 } } }
+    );
+  }
   next();
 });
-const model = mongoose.model("ChatData", Chat);
+
+const model = mongoose.model("ChatData", ChatSchema);
 
 export default model;

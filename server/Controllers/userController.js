@@ -14,33 +14,42 @@ export const login = async (req, res) => {
   });
   if (!user) {
     return res.status(404).send({ message: "Invalid Emailid/password" });
-  }
-  const isPasswordValid = await bcryptjs.compare(password, user.password);
-  if (!isPasswordValid) {
-    return res.status(401).send({ message: "Invalid credentials" });
-  }
-  // User is authenticated
-  if (user.partial_execution === true) {
-    QRCode.toDataURL(user.secret, (err, image_data) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).send("Internal Server Error");
+  } else {
+    const isPasswordValid = await bcryptjs.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).send({ message: "Invalid credentials" });
+    } else {
+      // User is authenticated
+      if (user.partial_execution === true) {
+        const secret = speakeasy.generateSecret({ length: 20 });
+        QRCode.toDataURL(secret.otpauth_url, async (err, image_data) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).send("Internal Server Error");
+          } else {
+            await User.findOneAndUpdate(
+              { userId: user.userId },
+              { $set: { secret: secret.base32 } }
+            );
+            return res.status(201).send({
+              qrCode: image_data,
+              message: "Sign In Partially Executed",
+            });
+          }
+        });
       } else {
-        return res
-          .status(201)
-          .send({ qrCode: image_data, message: "Sign In Partially Executed" });
+        const tokenCode = sign(
+          {
+            userId: user.userId,
+          },
+          process.env.SECRET
+        );
+        return res.status(200).send({
+          userId: user.userId,
+          tokenCode,
+        });
       }
-    });
-    const tokenCode = sign(
-      {
-        userId: user.userId,
-      },
-      process.env.SECRET
-    );
-    return res.status(200).send({
-      userId: user.userId,
-      tokenCode,
-    });
+    }
   }
 };
 export const verify = async (req, res) => {
@@ -109,8 +118,9 @@ export const totpSignIn = async (req, res) => {
   if (!verified) {
     return res.status(401).send("Invalid token");
   } else {
-    User.updateOne(
-      { partial_execution: true },
+    console.log(verified);
+    await User.updateOne(
+      { userId: userId, partial_execution: true },
       { $set: { partial_execution: false } }
     );
   }
