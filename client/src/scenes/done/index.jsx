@@ -1,6 +1,6 @@
 import * as React from "react";
 import { styled, useTheme } from "@mui/material/styles";
-import { Box, Typography, useMediaQuery } from "@mui/material";
+import { Box, Toolbar, Typography, useMediaQuery, AppBar } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -23,6 +23,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
 import { ColorModeContext } from "../../theme";
+import { tokens } from "../../theme";
 import EventOutlinedIcon from "@mui/icons-material/EventOutlined";
 
 const drawerWidth = 350;
@@ -59,7 +60,7 @@ const navItems = [
 
 export default function SidebarAdmin() {
   const theme = useTheme();
-
+  const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const { pathname } = useLocation();
   const [active, setActive] = useState("");
@@ -129,6 +130,19 @@ export default function SidebarAdmin() {
           )}
         </IconButton>
       </Box>
+      <AppBar
+        position="fixed"
+        sx={{
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          backgroundColor: "transparent",
+        }}
+      >
+        <Toolbar>
+          <Typography variant="h6" noWrap component="div">
+            Clipped drawer
+          </Typography>
+        </Toolbar>
+      </AppBar>
       <Drawer
         sx={{
           marginTop: "1rem",
@@ -138,9 +152,11 @@ export default function SidebarAdmin() {
             width: drawerWidth,
             boxSizing: "border-box",
             backgroundColor: theme.palette.background.default,
+            position: "fixed",
+            top: "4.5rem",
           },
         }}
-        variant="persistent"
+        variant="permanent"
         anchor="left"
         open={true}
       >
