@@ -21,6 +21,7 @@ app.use(cors());
 
 app.use("/user", Login);
 app.use("/signin", OTP);
+app.use("/chat")
 // Mongoose Setup
 const PORT = process.env.PORT || 9000;
 mongoose
