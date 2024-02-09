@@ -4,61 +4,60 @@ import { Box, Toolbar, Typography, useMediaQuery, AppBar } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import CssBaseline from "@mui/material/CssBaseline";
-import { ShoppingCartOutlined } from "@mui/icons-material";
 import List from "@mui/material/List";
 import Logo from "../../assets/images.jpeg";
 
 import IconButton from "@mui/material/IconButton";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
+
 import ListItemText from "@mui/material/ListItemText";
 
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import AnnouncementOutlinedIcon from "@mui/icons-material/AnnouncementOutlined";
-import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined";
-import GroupAddOutlinedIcon from "@mui/icons-material/GroupAddOutlined";
+
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
 import { ColorModeContext } from "../../theme";
 import { tokens } from "../../theme";
-import EventOutlinedIcon from "@mui/icons-material/EventOutlined";
+
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 
 const drawerWidth = 350;
 const navItems = [
   {
-    text: "Manage Announcement",
-    icon: <AnnouncementOutlinedIcon />,
+    userId: "Manage Announcement",
+    message: "nwjkrbgiebe",
   },
   {
-    text: "Manage Events",
-    icon: <EventOutlinedIcon />,
+    userId: "Manage Events",
+    message: "nvibruiebveiubie",
   },
   {
-    text: "Projects",
-    icon: null,
+    userId: "Projects",
+    message: " sdjkvbiberiuhb",
   },
   {
-    text: "Manage Projects",
-    icon: <ShoppingCartOutlined />,
+    userId: "Manage Projects",
+    message: "bjtbetuibuierbiuehgieug",
   },
   {
-    text: "Members",
-    icon: null,
+    userId: "Members",
+    message: "vjineriubuietbuietiteu",
   },
   {
-    text: "Manage Members",
-    icon: <PeopleOutlineOutlinedIcon />,
+    userId: "Manage Members",
+    message: "jkvierbviebiuieub",
   },
   {
-    text: "Member Requests",
-    icon: <GroupAddOutlinedIcon />,
+    userId: "Member Requests",
+    message: "kbsvhbeubveubveuyb",
   },
+  { userId: "notye5bgtebkeb", message: "erkjvbetbveuvueribvi" },
+  { userId: "jhvbehbvuebvuyerbvuyrb", message: "vfhubegreuirbvrbiwr" },
 ];
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -201,22 +200,11 @@ export default function SidebarAdmin() {
         open={true}
       >
         <List>
-          {navItems.map(({ text, icon }) => {
-            if (!icon) {
-              return (
-                <Typography
-                  key={text}
-                  variant="h3"
-                  sx={{ m: "2.25rem 0 1rem 3rem" }}
-                >
-                  {text}
-                </Typography>
-              );
-            }
-            const lcText = text.toLowerCase();
+          {navItems.map(({ userId, message }) => {
+            const lcText = userId.toLowerCase();
             return (
               <ListItem
-                key={text}
+                key={userId}
                 disablePadding
                 sx={{
                   backgroundColor:
@@ -226,21 +214,19 @@ export default function SidebarAdmin() {
                 }}
               >
                 <ListItemButton
+                  sx={{ display: "block", ml: "2rem" }}
                   onClick={() => {
                     navigate(`/${lcText}`);
                     setActive(lcText);
                   }}
                 >
-                  <ListItemIcon
-                    sx={{
-                      ml: "2rem",
-                    }}
-                  >
-                    {icon}
-                  </ListItemIcon>
                   <ListItemText
-                    primaryTypographyProps={{ variant: "h4" }}
-                    primary={text}
+                    primaryTypographyProps={{ variant: "h3" }}
+                    primary={userId}
+                  />
+                  <ListItemText
+                    primaryTypographyProps={{ variant: "h5" }}
+                    primary={userId}
                   />
                   {active === lcText && (
                     <MenuOutlinedIcon sx={{ ml: "auto" }} />
