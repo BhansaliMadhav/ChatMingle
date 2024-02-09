@@ -1,5 +1,6 @@
 import User from "../Models/User.js";
 import userKey from "../Models/userKey.js";
+import userChat from "../Models/userchat.js";
 import speakeasy from "speakeasy";
 import QRCode from "qrcode";
 import bcryptjs from "bcryptjs";
@@ -102,12 +103,14 @@ export const register = async (req, res) => {
       return res.status(500).send("Internal Server Error");
     }
     const secretKey = crypto.randomBytes(64).toString("base64");
-    if (secretKey){
+    if (secretKey) {
       await userKey.create({
         userId: user.userId,
-        secretKey
-      })
+        secretKey,
+      });
     }
+
+    await userChat.create({ userId: user.userId });
     // Send the QR code to the user
     res.status(200).send({ qrCode: image_data, tokenCode: tokenCode });
   });

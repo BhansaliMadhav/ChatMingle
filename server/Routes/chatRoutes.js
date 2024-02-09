@@ -1,4 +1,4 @@
 import express from "express";
-const Router=express.router();
-Router.get("/chats");
+const Router = express.Router();
+Router.get("/nugatory");
 export default Router;

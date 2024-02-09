@@ -1,11 +1,12 @@
 import * as React from "react";
-import { styled, useTheme } from "@mui/material/styles";
+import { styled, alpha, useTheme } from "@mui/material/styles";
 import { Box, Toolbar, Typography, useMediaQuery, AppBar } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ShoppingCartOutlined } from "@mui/icons-material";
 import List from "@mui/material/List";
+import Logo from "../../assets/images.jpeg";
 
 import IconButton from "@mui/material/IconButton";
 import ListItem from "@mui/material/ListItem";
@@ -25,6 +26,8 @@ import { useContext } from "react";
 import { ColorModeContext } from "../../theme";
 import { tokens } from "../../theme";
 import EventOutlinedIcon from "@mui/icons-material/EventOutlined";
+import SearchIcon from "@mui/icons-material/Search";
+import InputBase from "@mui/material/InputBase";
 
 const drawerWidth = 350;
 const navItems = [
@@ -57,6 +60,54 @@ const navItems = [
     icon: <GroupAddOutlinedIcon />,
   },
 ];
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  // backgroundColor: colors.grey[200]
+  backgroundColor:
+    theme.palette.mode === "dark"
+      ? alpha(theme.palette.common.white, 0.15)
+      : alpha(theme.palette.common.black, 0.35),
+  "&:hover": {
+    backgroundColor:
+      theme.palette.mode === "dark"
+        ? alpha(theme.palette.common.white, 0.25)
+        : alpha(theme.palette.common.black, 0.55),
+  },
+  marginLeft: 0,
+  width: "100%",
+  [theme.breakpoints.up("sm")]: {
+    marginLeft: theme.spacing(1),
+    width: "auto",
+  },
+}));
+
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: "inherit",
+  width: "100%",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create("width"),
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
+      },
+    },
+  },
+}));
 
 export default function SidebarAdmin() {
   const theme = useTheme();
@@ -71,18 +122,6 @@ export default function SidebarAdmin() {
 
     setActive(replaced);
   }, [pathname]);
-
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleInputChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
-  const handleSearch = () => {
-    // Pass the search query to the parent component or perform search logic here
-    // onSearch(searchQuery);
-  };
-
   return (
     <Box sx={{ display: "flex" }} mt={"1rem"}>
       <CssBaseline />
@@ -95,52 +134,53 @@ export default function SidebarAdmin() {
         flexGrow={"1"}
         width="100%"
         gap="118%"
-      >
-        {/* <Logo /> */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            position: "fixed",
-            left: "50%",
-            top: "18px",
-          }}
-        >
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={handleInputChange}
-          />
-          <button onClick={handleSearch}>Search</button>
-        </Box>
-        <IconButton
-          sx={{
-            position: "fixed",
-            right: "50px",
-            top: "5px",
-          }}
-          onClick={colorMode.toggleColorMode}
-        >
-          {/* <Logo /> */}
-          {theme.palette.mode === "dark" ? (
-            <DarkModeOutlinedIcon fontSize="large" />
-          ) : (
-            <LightModeOutlinedIcon fontSize="large" />
-          )}
-        </IconButton>
-      </Box>
+      ></Box>
       <AppBar
         position="fixed"
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor: "transparent",
+          backgroundColor: theme.palette.neutral.dark,
         }}
       >
         <Toolbar>
-          <Typography variant="h6" noWrap component="div">
-            Clipped drawer
-          </Typography>
+          <img
+            src={Logo}
+            alt="this is logo"
+            style={{ height: "50px", marginLeft: "10px", borderRadius: "20%" }}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              position: "fixed",
+              left: "80%",
+              top: "14px",
+            }}
+          >
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ "aria-label": "search" }}
+              />
+            </Search>
+          </Box>
+          <IconButton
+            sx={{
+              position: "fixed",
+              right: "50px",
+              top: "9px",
+            }}
+            onClick={colorMode.toggleColorMode}
+          >
+            {theme.palette.mode === "light" ? (
+              <DarkModeOutlinedIcon fontSize="large" />
+            ) : (
+              <LightModeOutlinedIcon fontSize="large" />
+            )}
+          </IconButton>
         </Toolbar>
       </AppBar>
       <Drawer
