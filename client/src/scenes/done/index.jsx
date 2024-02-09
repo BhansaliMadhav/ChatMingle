@@ -26,7 +26,7 @@ import { tokens } from "../../theme";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 
-const drawerWidth = 350;
+var drawerWidth = 500;
 const navItems = [
   {
     userId: "Manage Announcement",
@@ -46,7 +46,7 @@ const navItems = [
   },
   {
     userId: "Members",
-    message: "vjineriubuietbuietiteu",
+    message: "vjineriubuietbuietiteuyjfytdytdytdrtdsyrdytfduydtd",
   },
   {
     userId: "Manage Members",
@@ -58,6 +58,26 @@ const navItems = [
   },
   { userId: "notye5bgtebkeb", message: "erkjvbetbveuvueribvi" },
   { userId: "jhvbehbvuebvuyerbvuyrb", message: "vfhubegreuirbvrbiwr" },
+  {
+    userId: "Member Requests mrsngirbgieurbger",
+    message: "kbsvhbeubveubveuyb",
+  },
+  {
+    userId: "Memberrwurguywgfbrgibigrgi7gufbgve",
+    message: "kbsvhbeubveubveuyb",
+  },
+  {
+    userId: "Member95646798765498465346465465",
+    message: "kbsvhbeubveubveuyb",
+  },
+  {
+    userId: "ruigeviubvekkbtnibur",
+    message: "kbsvhbeubveubveuyb",
+  },
+  {
+    userId: "864651657685",
+    message: "kbsvhbeubveubveuyb",
+  },
 ];
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -184,15 +204,17 @@ export default function SidebarAdmin() {
       </AppBar>
       <Drawer
         sx={{
-          marginTop: "1rem",
           width: drawerWidth,
+          overflowY: "auto",
+          height: "50vh",
           flexShrink: 0,
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             boxSizing: "border-box",
             backgroundColor: theme.palette.background.default,
             position: "fixed",
-            top: "4.5rem",
+            top: "3.1rem",
+            height: "94vh",
           },
         }}
         variant="permanent"
@@ -222,11 +244,19 @@ export default function SidebarAdmin() {
                 >
                   <ListItemText
                     primaryTypographyProps={{ variant: "h3" }}
-                    primary={userId}
+                    primary={
+                      userId.length > 30
+                        ? `${userId.substring(0, 20)}...`
+                        : userId
+                    }
                   />
                   <ListItemText
                     primaryTypographyProps={{ variant: "h5" }}
-                    primary={userId}
+                    primary={
+                      message.length > 40
+                        ? `${message.substring(0, 20)}...`
+                        : message
+                    }
                   />
                   {active === lcText && (
                     <MenuOutlinedIcon sx={{ ml: "auto" }} />
