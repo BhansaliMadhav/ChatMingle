@@ -6,7 +6,7 @@ const chatId = {
 const userChat = new mongoose.Schema(
   {
     chatIds: [chatId],
-    userID: {
+    userId: {
       type: String,
       required: true,
       unique: true,

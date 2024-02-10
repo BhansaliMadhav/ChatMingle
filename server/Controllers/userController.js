@@ -109,8 +109,10 @@ export const register = async (req, res) => {
         secretKey,
       });
     }
+    if (user.userId) {
+      await userChat.create({ userId: user.userId });
+    }
 
-    await userChat.create({ userId: user.userId });
     // Send the QR code to the user
     res.status(200).send({ qrCode: image_data, tokenCode: tokenCode });
   });
