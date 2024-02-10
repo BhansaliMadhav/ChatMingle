@@ -1,20 +1,28 @@
 import * as React from "react";
 import { styled, alpha, useTheme } from "@mui/material/styles";
-import { Box, Toolbar, Typography, useMediaQuery, AppBar } from "@mui/material";
+import {
+  Box,
+  Toolbar,
+  Typography,
+  useMediaQuery,
+  AppBar,
+  TextField,
+} from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import CssBaseline from "@mui/material/CssBaseline";
 import List from "@mui/material/List";
 import Logo from "../../assets/images.jpeg";
-
+import ButtonSend from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-
+import Stack from "@mui/material/Stack";
 import ListItemText from "@mui/material/ListItemText";
 
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import SendIcon from "@mui/icons-material/Send";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -22,6 +30,10 @@ import { useEffect } from "react";
 import { useContext } from "react";
 import { ColorModeContext } from "../../theme";
 import { tokens } from "../../theme";
+
+// import { ButtontoAdd } from "./chatComponent/button.jsx";
+import { ChatMessage } from "./chatComponent/chatMessage.jsx";
+import { ScrollContainer } from "./chatComponent/scrollContainer.jsx";
 
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
@@ -121,6 +133,7 @@ export default function SidebarAdmin() {
 
     setActive(replaced);
   }, [pathname]);
+  const [numItems, setNumItems] = useState(5);
   return (
     <Box sx={{ display: "flex" }} mt={"1rem"}>
       <CssBaseline />
@@ -237,6 +250,60 @@ export default function SidebarAdmin() {
           })}
         </List>
       </Drawer>
+      <Stack
+        sx={{ left: "28%", top: 130, position: "fixed", width: "100%" }}
+        direction="column"
+        spacing={1}
+      >
+        <ScrollContainer
+          scrollCta="New message!"
+          sx={{
+            position: "fixed",
+            width: "75%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            alignItems: "flex-end",
+            padding: "20px",
+            boxSizing: "border-box",
+          }}
+        >
+          {Array.from(Array(numItems).keys()).map((n) => (
+            <ChatMessage message={`Message ${n + 1}`} key={`message-${n}`} />
+          ))}
+        </ScrollContainer>
+      </Stack>
+      <Stack direction="row" spacing={0.5}>
+        <TextField
+          sx={{
+            position: "fixed",
+            width: "70%",
+            bottom: 4,
+            left: "58%",
+            transform: "translateX(-50%)",
+          }}
+          id="filled-basic"
+          label="Type your message here"
+          variant="filled"
+        />
+        <ButtonSend
+          onClick={() => setNumItems(numItems + 1)}
+          sx={{
+            position: "fixed",
+            bottom: 6,
+            height: "7%",
+            width: "6%",
+            right: -40,
+            border: "1px solid white",
+            transform: "translateX(-50%)",
+          }}
+          id="filled-basic"
+          variant="filled"
+          endIcon={<SendIcon />}
+        >
+          Send
+        </ButtonSend>
+      </Stack>
     </Box>
   );
 }
