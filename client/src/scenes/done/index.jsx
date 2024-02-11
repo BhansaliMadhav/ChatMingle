@@ -31,13 +31,10 @@ import { useContext } from "react";
 import { ColorModeContext } from "../../theme";
 import { tokens } from "../../theme";
 
-// import { ButtontoAdd } from "./chatComponent/button.jsx";
-import { ChatMessage } from "./chatComponent/chatMessage.jsx";
-import { ScrollContainer } from "./chatComponent/scrollContainer.jsx";
-
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 
+import Messages from "./chatComponent/messages.js";
 var drawerWidth = 350;
 const navItems = [
   {
@@ -139,7 +136,146 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
+function randomName() {
+  const adjectives = [
+    "autumn",
+    "hidden",
+    "bitter",
+    "misty",
+    "silent",
+    "empty",
+    "dry",
+    "dark",
+    "summer",
+    "icy",
+    "delicate",
+    "quiet",
+    "white",
+    "cool",
+    "spring",
+    "winter",
+    "patient",
+    "twilight",
+    "dawn",
+    "crimson",
+    "wispy",
+    "weathered",
+    "blue",
+    "billowing",
+    "broken",
+    "cold",
+    "damp",
+    "falling",
+    "frosty",
+    "green",
+    "long",
+    "late",
+    "lingering",
+    "bold",
+    "little",
+    "morning",
+    "muddy",
+    "old",
+    "red",
+    "rough",
+    "still",
+    "small",
+    "sparkling",
+    "shy",
+    "wandering",
+    "withered",
+    "wild",
+    "black",
+    "young",
+    "holy",
+    "solitary",
+    "fragrant",
+    "aged",
+    "snowy",
+    "proud",
+    "floral",
+    "restless",
+    "divine",
+    "polished",
+    "ancient",
+    "purple",
+    "lively",
+    "nameless",
+  ];
+  const nouns = [
+    "waterfall",
+    "river",
+    "breeze",
+    "moon",
+    "rain",
+    "wind",
+    "sea",
+    "morning",
+    "snow",
+    "lake",
+    "sunset",
+    "pine",
+    "shadow",
+    "leaf",
+    "dawn",
+    "glitter",
+    "forest",
+    "hill",
+    "cloud",
+    "meadow",
+    "sun",
+    "glade",
+    "bird",
+    "brook",
+    "butterfly",
+    "bush",
+    "dew",
+    "dust",
+    "field",
+    "fire",
+    "flower",
+    "firefly",
+    "feather",
+    "grass",
+    "haze",
+    "mountain",
+    "night",
+    "pond",
+    "darkness",
+    "snowflake",
+    "silence",
+    "sound",
+    "sky",
+    "shape",
+    "surf",
+    "thunder",
+    "violet",
+    "water",
+    "wildflower",
+    "wave",
+    "water",
+    "resonance",
+    "sun",
+    "wood",
+    "dream",
+    "cherry",
+    "tree",
+    "fog",
+    "frost",
+    "voice",
+    "paper",
+    "frog",
+    "smoke",
+    "star",
+  ];
+  const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const noun = nouns[Math.floor(Math.random() * nouns.length)];
+  return adjective + noun;
+}
 
+function randomColor() {
+  return "#" + Math.floor(Math.random() * 0xffffff).toString(16);
+}
 export default function SidebarAdmin() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -147,6 +283,26 @@ export default function SidebarAdmin() {
   const { pathname } = useLocation();
   const [active, setActive] = useState("");
   const navigate = useNavigate();
+  const [searched, searchText] = useState("");
+  async function search(event) {
+    event.preventDefault();
+    const response = await fetch(
+      process.env.REACT_APP_BASE_URL + "/search/userId",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          text: searched,
+        }),
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    // console.log(data);
+  }
   useEffect(() => {
     var str = pathname.substring(1);
     var replaced = str.replace("%20", " ");
@@ -154,6 +310,45 @@ export default function SidebarAdmin() {
     setActive(replaced);
   }, [pathname]);
   const [numItems, setNumItems] = useState(5);
+  const [messages, setMessages] = useState([
+    {
+      id: "1",
+      data: "This is a test message!",
+      member: {
+        id: "1",
+        clientData: {
+          color: "blue",
+          username: "bluemoon",
+        },
+      },
+    },
+    {
+      id: "2",
+      data: "This is test message2!",
+      member: {
+        id: "2",
+        clientData: {
+          color: "green",
+          username: "sky",
+        },
+      },
+    },
+    {
+      id: "3",
+      data: "This is test message3!",
+      member: {
+        id: "3",
+        clientData: {
+          color: "green",
+          username: "sky",
+        },
+      },
+    },
+  ]);
+  const [me, setMe] = useState({
+    username: randomName(),
+    color: randomColor(),
+  });
   return (
     <Box sx={{ display: "flex" }} mt={"1rem"}>
       <CssBaseline />
@@ -196,6 +391,9 @@ export default function SidebarAdmin() {
               <StyledInputBase
                 placeholder="Search…"
                 inputProps={{ "aria-label": "search" }}
+                onChange={(event) => {
+                  searchText(event.target.value);
+                }}
               />
             </Search>
           </Box>
@@ -286,23 +484,9 @@ export default function SidebarAdmin() {
         direction="column"
         spacing={1}
       >
-        <ScrollContainer
-          scrollCta="New message!"
-          sx={{
-            position: "fixed",
-            width: "75%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-start",
-            alignItems: "flex-end",
-            padding: "20px",
-            boxSizing: "border-box",
-          }}
-        >
-          {Array.from(Array(numItems).keys()).map((n) => (
-            <ChatMessage message={`Message ${n + 1}`} key={`message-${n}`} />
-          ))}
-        </ScrollContainer>
+        <div className={styled.appContent}>
+          <Messages messages={messages} me={me} />
+        </div>
       </Stack>
       <Stack direction="row" spacing={0.5}>
         <TextField
