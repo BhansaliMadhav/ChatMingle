@@ -46,7 +46,7 @@ const QRFA = () => {
       localStorage.setItem("tokenCode", data.tokenCode);
       // alert("Login Successful");
       console.log("triggered success");
-      navigate("/login");
+      navigate("/done");
     } else {
       console.log("triggered failure");
       alert("Please Check your userId and password");
@@ -61,7 +61,7 @@ const QRFA = () => {
       justifyContent={"center"}
       alignContent={"center"}
     >
-      <Box justifyContent={"center"} width={"100%"}>
+      <Box justifyContent={"center"} width={"100vw"}>
         <Typography
           margin={"0 auto"}
           width={"20rem"}

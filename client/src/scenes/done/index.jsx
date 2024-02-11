@@ -38,7 +38,7 @@ import { ScrollContainer } from "./chatComponent/scrollContainer.jsx";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 
-var drawerWidth = 500;
+var drawerWidth = 350;
 const navItems = [
   {
     userId: "Manage Announcement",
@@ -223,6 +223,7 @@ export default function SidebarAdmin() {
           flexShrink: 0,
           "& .MuiDrawer-paper": {
             width: drawerWidth,
+            resize: "horizontal",
             boxSizing: "border-box",
             backgroundColor: theme.palette.background.default,
             position: "fixed",

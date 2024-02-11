@@ -115,7 +115,7 @@ const Login = () => {
     <Box m={isMobile ? "2vh 5vw" : "1.5rem 2.5rem"}>
       <Box mt={"3rem"}>
         <form onSubmit={!!activeButton ? Signin : Login}>
-          <Box width={"100%"} display={"flex"} justifyContent={"center"}>
+          <Box width={"100vw"} display={"flex"} justifyContent={"center"}>
             <Box
               gap="30px"
               width={isMobile ? "200px" : "20%"}

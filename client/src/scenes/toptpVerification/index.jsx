@@ -45,7 +45,7 @@ const TOTP = () => {
   }
   return (
     <Box mt={"3rem"}>
-      <Box width={"100%"} display={"flex"} justifyContent={"center"}>
+      <Box width={"100vw"} display={"flex"} justifyContent={"center"}>
         <Box
           gap="30px"
           width={"20%"}

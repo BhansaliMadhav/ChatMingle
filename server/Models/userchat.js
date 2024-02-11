@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 const chatId = {
   type: String,
-  unique: true,
+  required: true,
+  default: null,
 };
 const userChat = new mongoose.Schema(
   {
