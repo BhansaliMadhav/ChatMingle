@@ -16,7 +16,10 @@ export const SearchResult = async (req, res) => {
       const searchTextChars = searchText.split("");
 
       // Check if the first character of the userId matches the first character of the searchText
-      if (userIdChars.length < searchTextChars.length) {
+      if (
+        userIdChars.length < searchTextChars.length ||
+        searchTextChars.length === 0
+      ) {
         return false;
       }
 

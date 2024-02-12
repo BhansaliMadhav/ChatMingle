@@ -7,6 +7,7 @@ import {
   useMediaQuery,
   AppBar,
   TextField,
+  ListSubheader,
 } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
@@ -88,6 +89,18 @@ const navItems = [
     message: "kbsvhbeubveubveuyb",
   },
 ];
+const User = ({ userId, name }) => {
+  return (
+    <li>
+      <Typography paddingLeft={"10px"} variant="h4">
+        {name.length > 10 ? `${name.substring(0, 10)}...` : name}
+      </Typography>
+      <Typography paddingLeft={"10px"} variant="h5">
+        {userId.length > 15 ? `${userId.substring(0, 15)}...` : userId}
+      </Typography>
+    </li>
+  );
+};
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -268,6 +281,7 @@ function randomName() {
     "smoke",
     "star",
   ];
+
   const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
   const noun = nouns[Math.floor(Math.random() * nouns.length)];
   return adjective + noun;
@@ -284,6 +298,7 @@ export default function SidebarAdmin() {
   const [active, setActive] = useState("");
   const navigate = useNavigate();
   const [searched, searchText] = useState("");
+  const [searchedResult, setSearchResult] = useState([]);
   async function search() {
     const response = await fetch(
       process.env.REACT_APP_BASE_URL + "/search/userId",
@@ -300,6 +315,7 @@ export default function SidebarAdmin() {
     );
     const data = await response.json();
     console.log(data);
+    setSearchResult(data);
     // console.log(data);
   }
 
@@ -310,9 +326,7 @@ export default function SidebarAdmin() {
     setActive(replaced);
   }, [pathname]);
   useEffect(() => {
-    if (searched !== "") {
-      search();
-    }
+    search();
   }, [searched]);
   const [numItems, setNumItems] = useState(5);
   const [messages, setMessages] = useState([
@@ -382,8 +396,8 @@ export default function SidebarAdmin() {
           />
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "row",
+              display: "block",
+
               position: "fixed",
               left: "80%",
               top: "14px",
@@ -401,6 +415,24 @@ export default function SidebarAdmin() {
                 }}
               />
             </Search>
+            {searchedResult.length === 0 ? undefined : (
+              <List
+                sx={{
+                  width: "100%",
+                  maxWidth: 360,
+                  bgcolor: "background.paper",
+                  position: "relative",
+                  overflow: "auto",
+                  maxHeight: 300,
+                  "& ul": { padding: 0 },
+                }}
+                subheader={<li />}
+              >
+                {searchedResult.map(({ userId, name }) => (
+                  <User key={userId} name={name} userId={userId} />
+                ))}
+              </List>
+            )}
           </Box>
           <IconButton
             sx={{
