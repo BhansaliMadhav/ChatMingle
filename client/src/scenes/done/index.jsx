@@ -9,6 +9,8 @@ import {
   TextField,
 } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
+import ListSubheader from "@mui/material/ListSubheader";
+
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import CssBaseline from "@mui/material/CssBaseline";
 import List from "@mui/material/List";
@@ -35,6 +37,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 
 import Messages from "./chatComponent/messages.js";
+import { response } from "express";
 var drawerWidth = 350;
 const navItems = [
   {
@@ -136,6 +139,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
+
+
 function randomName() {
   const adjectives = [
     "autumn",
@@ -284,8 +289,9 @@ export default function SidebarAdmin() {
   const [active, setActive] = useState("");
   const navigate = useNavigate();
   const [searched, searchText] = useState("");
+  var response = [];
   async function search() {
-    const response = await fetch(
+    let response = await fetch(
       process.env.REACT_APP_BASE_URL + "/search/userId",
       {
         method: "POST",
@@ -382,8 +388,7 @@ export default function SidebarAdmin() {
           />
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "row",
+              display: "block",
               position: "fixed",
               left: "80%",
               top: "14px",
@@ -401,6 +406,7 @@ export default function SidebarAdmin() {
                 }}
               />
             </Search>
+            
           </Box>
           <IconButton
             sx={{
