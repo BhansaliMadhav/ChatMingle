@@ -7,7 +7,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import Login from "./Routes/Login.js";
 import OTP from "./Routes/otpRoutes.js";
-
+import SEARCH from "./Routes/Search.js";
 //Configuration
 dotenv.config();
 const app = express();
@@ -21,6 +21,7 @@ app.use(cors());
 
 app.use("/user", Login);
 app.use("/signin", OTP);
+app.use("/search", SEARCH);
 // app.use("/chat")
 // Mongoose Setup
 const PORT = process.env.PORT || 9000;

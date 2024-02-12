@@ -284,12 +284,11 @@ export default function SidebarAdmin() {
   const [active, setActive] = useState("");
   const navigate = useNavigate();
   const [searched, searchText] = useState("");
-  async function search(event) {
-    event.preventDefault();
+  async function search() {
     const response = await fetch(
       process.env.REACT_APP_BASE_URL + "/search/userId",
       {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -303,12 +302,18 @@ export default function SidebarAdmin() {
     console.log(data);
     // console.log(data);
   }
+
   useEffect(() => {
     var str = pathname.substring(1);
     var replaced = str.replace("%20", " ");
 
     setActive(replaced);
   }, [pathname]);
+  useEffect(() => {
+    if (searched !== "") {
+      search();
+    }
+  }, [searched]);
   const [numItems, setNumItems] = useState(5);
   const [messages, setMessages] = useState([
     {
