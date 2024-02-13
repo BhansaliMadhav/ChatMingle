@@ -9,7 +9,7 @@ import crypto from "crypto";
 const { sign } = jwt;
 
 export const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, fingerprint } = req.body;
   // Find the user with the given email address
 
   const user = await User.findOne({
@@ -46,6 +46,10 @@ export const login = async (req, res) => {
             userId: user.userId,
           },
           process.env.SECRET
+        );
+        await User.findOneAndUpdate(
+          { userId: user.userId },
+          { $set: { fingerprint: fingerprint } }
         );
         return res.status(200).send({
           userId: user.userId,

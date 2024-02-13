@@ -1,5 +1,6 @@
 import * as React from "react";
 import { styled, alpha, useTheme } from "@mui/material/styles";
+import jwt from "jsonwebtoken";
 import {
   Box,
   Toolbar,
@@ -290,7 +291,16 @@ function randomName() {
 function randomColor() {
   return "#" + Math.floor(Math.random() * 0xffffff).toString(16);
 }
-export default function SidebarAdmin() {
+export default function UserMenu() {
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    const tokenCode = localStorage.getItem("tokenCode");
+    const user = jwt.decode(tokenCode);
+    if (!user || !tokenCode) {
+      localStorage.removeItem("tokenCode");
+      navigate("/login");
+    }
+  });
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);

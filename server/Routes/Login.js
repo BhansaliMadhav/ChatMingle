@@ -7,10 +7,7 @@ import {
 } from "../Controllers/userController.js";
 const router = express.Router();
 
-router.post("/login", login, (req, res) => {
-  // This route handler will only be called if the user's token is valid
-  res.send("Protected resource accessed successfully");
-});
+router.post("/login", login);
 router.post("/register", register);
 
 router.post("/login/totp", verify);

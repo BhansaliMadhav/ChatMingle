@@ -9,7 +9,7 @@ export const SearchResult = async (req, res) => {
     const users = await User.find({}).select(
       "-password -secret -fingerprint -partial_execution -otp_verification -_id -createdAt -updatedAt -__v"
     );
-    console.log(users);
+
     const filteredUsers = users.filter((user) => {
       const userIdChars = user.userId.toLowerCase().split("");
       const nameChars = user.name.toLowerCase().split("");
