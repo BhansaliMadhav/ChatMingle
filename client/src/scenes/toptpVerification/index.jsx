@@ -35,6 +35,7 @@ const TOTP = () => {
     console.log(data.message);
     if (data.message === "Successfull") {
       // alert("Login Successful");
+      localStorage.setItem("tokenCode", data.tokenCode);
       console.log("triggered success");
       navigate("/done");
     } else {

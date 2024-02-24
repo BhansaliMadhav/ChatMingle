@@ -74,7 +74,13 @@ export const verify = async (req, res) => {
   if (!verified) {
     return res.status(401).send("Invalid token");
   } else {
-    res.status(200).send({ message: "Successfull" });
+    const tokenCode = sign(
+      {
+        userId: user.userId,
+      },
+      process.env.SECRET
+    );
+    res.status(200).send({ message: "Successfull", tokenCode: tokenCode });
   }
 };
 
