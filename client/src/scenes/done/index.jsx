@@ -291,6 +291,53 @@ function randomName() {
 function randomColor() {
   return "#" + Math.floor(Math.random() * 0xffffff).toString(16);
 }
+
+const SearchResultItem = ({ result, onUserClick }) => {
+  const [isLoading, setIsLoading] = useState(false);
+   const navigate = useNavigate();
+
+  const handleItemClick = async () => {
+    const userId = localStorage.getItem("userId");
+    try {
+      setIsLoading(true);
+
+      // Make a request to the backend to create a user key and generate a chat
+      const response = await fetch(process.env.REACT_APP_BASE_URL + '/search/createUserAndChat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any other headers as needed, e.g., authentication token
+        },
+        body: JSON.stringify({
+          userId1: userId,
+          userId2: result.userId,
+        }),
+      });
+
+      if (response.ok) {
+        const { chatKey } = await response.json();
+
+        // Redirect the user to the chat page with the generated chat key
+        navigate(`/chat?chatKey=${chatKey}user=${result.userId}`);
+      } else {
+        console.error('Failed to create user and chat');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  return (
+    <div>
+      {/* Display search result information */}
+      <p onClick={handleItemClick} style={{ cursor: 'pointer' }}>
+        {result.userId}
+      </p>
+    </div>
+  );
+};
+
 export default function UserMenu() {
   useEffect(() => {
     const userId = localStorage.getItem("userId");
@@ -374,10 +421,16 @@ export default function UserMenu() {
       },
     },
   ]);
+
+  
   const [me, setMe] = useState({
     username: randomName(),
     color: randomColor(),
   });
+  const handleUserClick = (userId) => {
+    // Handle user click, for example, navigate to user profile page
+    navigate(`/${userId}`);
+  };
   return (
     <Box sx={{ display: "flex" }} mt={"1rem"}>
       <CssBaseline />
@@ -438,9 +491,13 @@ export default function UserMenu() {
                 }}
                 subheader={<li />}
               >
-                {searchedResult.map(({ userId, name }) => (
-                  <User key={userId} name={name} userId={userId} />
-                ))}
+                {searchedResult.map((result) => (
+              <SearchResultItem
+                key={result.userId}
+                result={result}
+                onUserClick={handleUserClick}
+              />
+            ))}
               </List>
             )}
           </Box>
@@ -568,4 +625,4 @@ export default function UserMenu() {
       </Stack>
     </Box>
   );
-}
+        };
