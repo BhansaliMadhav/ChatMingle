@@ -354,7 +354,7 @@ export default function UserMenu() {
                   <ListItemText
                     primaryTypographyProps={{ variant: "h4" }}
                     primary={
-                      senderId === `${localStorage.getItem("UserId")}`
+                      senderId !== `${localStorage.getItem("UserId")}`
                         ? `${receiverId.substring(0, 20)}...`
                         : `${senderId.substring(0, 20)}...`
                     }
