@@ -3,7 +3,8 @@ import Chat from "../Models/userchat.js";
 import bcrypt from "bcrypt";
 import ChatSchema from "../Models/chatModel.js";
 import mongoose from "mongoose";
-import userKeySchema from "../Models/userKey.js"
+import userKeySchema from "../Models/userKey.js";
+
 export const SearchResult = async (req, res) => {
   const { text } = req.body;
   try {
@@ -53,15 +54,16 @@ export const CreateChatKey = async (req, res) => {
   console.log(userId1, userId2);
   try {
     // Create or find chat using the hashed key and user IDs
-    const chat = await createOrFindChat( userId1, userId2);
-    res.status(200).json({ chatId: chat });
+    const chatId = await createOrFindChat(userId1, userId2);
+    console.log(chatId);
+    res.status(200).send({ chatId: chatId });
   } catch (error) {
     console.error("Error generating chat key:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-export const createOrFindChat = async ( userId1, userId2) => {
+export const createOrFindChat = async (userId1, userId2) => {
   console.log("function triggered");
   try {
     let chats = await ChatSchema.findOne({
@@ -72,26 +74,45 @@ export const createOrFindChat = async ( userId1, userId2) => {
       receiverId: userId1,
       senderId: userId2,
     }).select("-encryption_key");
-console.log(chats,chats2);
     if (chats === null && chats2 === null) {
-      const chatId = new mongoose.Types.ObjectId()
-      const user1key = await userKeySchema.findOne({userId:userId1}).secretKey
-      const user2key = await userKeySchema.findOne({userId:userId2}).secretKey
-      const chatKey =   String.fromCharCode(user1key ^ user2key);
+      const chatId = new mongoose.Types.ObjectId();
+      const user1key = await userKeySchema.findOne({ userId: userId1 })
+        .secretKey;
+      const user2key = await userKeySchema.findOne({ userId: userId2 })
+        .secretKey;
+      const chatKey = String.fromCharCode(user1key ^ user2key);
       console.log(chatKey);
       const chat = new ChatSchema({
         id: chatId,
-        senderId:userId1,
-        receiverId:userId2,
-        encryption_key:chatKey,
-        message:[{}],
+        senderId: userId1,
+        receiverId: userId2,
+        encryption_key: chatKey,
+        message: [{}],
       });
       await chat.save();
+      return chatId;
+    } else {
+      if (chats === null) {
+        return chats2.id;
+      } else {
+        return chats.id;
+      }
     }
-    
-    return chats;
   } catch (error) {
     console.error("Error creating or finding chat:", error);
     throw error;
   }
+};
+
+export const chatSearch = async (req, res) => {
+  try{
+  const params = req.query;
+  console.log(params.userId);
+  const chats = await ChatSchema.find({
+    $or: [{ senderId: params.userId }, { receiverId: params.userId }],
+  }).select("-encryption_key");
+  res.status(200).send({ chats: chats });
+}catch(error){
+  res.status(500).send("Internal Servor error")
+}
 };

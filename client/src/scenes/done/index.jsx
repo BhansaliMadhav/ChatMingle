@@ -38,58 +38,7 @@ import InputBase from "@mui/material/InputBase";
 
 import Messages from "./chatComponent/messages.js";
 var drawerWidth = 350;
-const navItems = [
-  {
-    userId: "Manage Announcement",
-    message: "nwjkrbgiebe",
-  },
-  {
-    userId: "Manage Events",
-    message: "nvibruiebveiubie",
-  },
-  {
-    userId: "Projects",
-    message: " sdjkvbiberiuhb",
-  },
-  {
-    userId: "Manage Projects",
-    message: "bjtbetuibuierbiuehgieug",
-  },
-  {
-    userId: "Members",
-    message: "vjineriubuietbuietiteuyjfytdytdytdrtdsyrdytfduydtd",
-  },
-  {
-    userId: "Manage Members",
-    message: "jkvierbviebiuieub",
-  },
-  {
-    userId: "Member Requests",
-    message: "kbsvhbeubveubveuyb",
-  },
-  { userId: "notye5bgtebkeb", message: "erkjvbetbveuvueribvi" },
-  { userId: "jhvbehbvuebvuyerbvuyrb", message: "vfhubegreuirbvrbiwr" },
-  {
-    userId: "Member Requests mrsngirbgieurbger",
-    message: "kbsvhbeubveubveuyb",
-  },
-  {
-    userId: "Memberrwurguywgfbrgibigrgi7gufbgve",
-    message: "kbsvhbeubveubveuyb",
-  },
-  {
-    userId: "Member95646798765498465346465465",
-    message: "kbsvhbeubveubveuyb",
-  },
-  {
-    userId: "ruigeviubvekkbtnibur",
-    message: "kbsvhbeubveubveuyb",
-  },
-  {
-    userId: "864651657685",
-    message: "kbsvhbeubveubveuyb",
-  },
-];
+var navItems = [];
 const User = ({ userId, name }) => {
   return (
     <li>
@@ -150,151 +99,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
-function randomName() {
-  const adjectives = [
-    "autumn",
-    "hidden",
-    "bitter",
-    "misty",
-    "silent",
-    "empty",
-    "dry",
-    "dark",
-    "summer",
-    "icy",
-    "delicate",
-    "quiet",
-    "white",
-    "cool",
-    "spring",
-    "winter",
-    "patient",
-    "twilight",
-    "dawn",
-    "crimson",
-    "wispy",
-    "weathered",
-    "blue",
-    "billowing",
-    "broken",
-    "cold",
-    "damp",
-    "falling",
-    "frosty",
-    "green",
-    "long",
-    "late",
-    "lingering",
-    "bold",
-    "little",
-    "morning",
-    "muddy",
-    "old",
-    "red",
-    "rough",
-    "still",
-    "small",
-    "sparkling",
-    "shy",
-    "wandering",
-    "withered",
-    "wild",
-    "black",
-    "young",
-    "holy",
-    "solitary",
-    "fragrant",
-    "aged",
-    "snowy",
-    "proud",
-    "floral",
-    "restless",
-    "divine",
-    "polished",
-    "ancient",
-    "purple",
-    "lively",
-    "nameless",
-  ];
-  const nouns = [
-    "waterfall",
-    "river",
-    "breeze",
-    "moon",
-    "rain",
-    "wind",
-    "sea",
-    "morning",
-    "snow",
-    "lake",
-    "sunset",
-    "pine",
-    "shadow",
-    "leaf",
-    "dawn",
-    "glitter",
-    "forest",
-    "hill",
-    "cloud",
-    "meadow",
-    "sun",
-    "glade",
-    "bird",
-    "brook",
-    "butterfly",
-    "bush",
-    "dew",
-    "dust",
-    "field",
-    "fire",
-    "flower",
-    "firefly",
-    "feather",
-    "grass",
-    "haze",
-    "mountain",
-    "night",
-    "pond",
-    "darkness",
-    "snowflake",
-    "silence",
-    "sound",
-    "sky",
-    "shape",
-    "surf",
-    "thunder",
-    "violet",
-    "water",
-    "wildflower",
-    "wave",
-    "water",
-    "resonance",
-    "sun",
-    "wood",
-    "dream",
-    "cherry",
-    "tree",
-    "fog",
-    "frost",
-    "voice",
-    "paper",
-    "frog",
-    "smoke",
-    "star",
-  ];
-
-  const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
-  const noun = nouns[Math.floor(Math.random() * nouns.length)];
-  return adjective + noun;
-}
-
-function randomColor() {
-  return "#" + Math.floor(Math.random() * 0xffffff).toString(16);
-}
 
 const SearchResultItem = ({ result, onUserClick }) => {
   const [isLoading, setIsLoading] = useState(false);
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleItemClick = async () => {
     const userId = localStorage.getItem("userId");
@@ -302,28 +110,31 @@ const SearchResultItem = ({ result, onUserClick }) => {
       setIsLoading(true);
 
       // Make a request to the backend to create a user key and generate a chat
-      const response = await fetch(process.env.REACT_APP_BASE_URL + '/search/createUserAndChat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // Add any other headers as needed, e.g., authentication token
-        },
-        body: JSON.stringify({
-          userId1: userId,
-          userId2: result.userId,
-        }),
-      });
+      const response = await fetch(
+        process.env.REACT_APP_BASE_URL + "/search/createUserAndChat",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // Add any other headers as needed, e.g., authentication token
+          },
+          body: JSON.stringify({
+            userId1: userId,
+            userId2: result.userId,
+          }),
+        }
+      );
+      const data = await response.json();
 
       if (response.ok) {
-        const { chatKey } = await response.json();
-
         // Redirect the user to the chat page with the generated chat key
-        navigate(`/chat?chatKey=${chatKey}user=${result.userId}`);
+        console.log(data.chatId);
+        navigate(`/chats/?chatId=${data.chatId}`);
       } else {
-        console.error('Failed to create user and chat');
+        console.error("Failed to create user and chat");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -331,7 +142,7 @@ const SearchResultItem = ({ result, onUserClick }) => {
   return (
     <div>
       {/* Display search result information */}
-      <p onClick={handleItemClick} style={{ cursor: 'pointer' }}>
+      <p onClick={handleItemClick} style={{ cursor: "pointer" }}>
         {result.userId}
       </p>
     </div>
@@ -339,6 +150,26 @@ const SearchResultItem = ({ result, onUserClick }) => {
 };
 
 export default function UserMenu() {
+  const NavItem = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      // Make a request to the backend to create a user key and generate a chat
+      const response = await fetch(
+        process.env.REACT_APP_BASE_URL + `/search/chats?userId=${userId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            // Add any other headers as needed, e.g., authentication token
+          },
+        }
+      );
+      const data = await response.json();
+      navItems = data.chats;
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
   useEffect(() => {
     const userId = localStorage.getItem("userId");
     const tokenCode = localStorage.getItem("tokenCode");
@@ -356,6 +187,7 @@ export default function UserMenu() {
   const navigate = useNavigate();
   const [searched, searchText] = useState("");
   const [searchedResult, setSearchResult] = useState([]);
+  const [chatList, setChatList] = useState([]);
   async function search() {
     const response = await fetch(
       process.env.REACT_APP_BASE_URL + "/search/userId",
@@ -375,7 +207,7 @@ export default function UserMenu() {
     setSearchResult(data);
     // console.log(data);
   }
-
+  NavItem();
   useEffect(() => {
     var str = pathname.substring(1);
     var replaced = str.replace("%20", " ");
@@ -385,48 +217,9 @@ export default function UserMenu() {
   useEffect(() => {
     search();
   }, [searched]);
+  console.log(navItems);
   const [numItems, setNumItems] = useState(5);
-  const [messages, setMessages] = useState([
-    {
-      id: "1",
-      data: "This is a test message!",
-      member: {
-        id: "1",
-        clientData: {
-          color: "blue",
-          username: "bluemoon",
-        },
-      },
-    },
-    {
-      id: "2",
-      data: "This is test message2!",
-      member: {
-        id: "2",
-        clientData: {
-          color: "green",
-          username: "sky",
-        },
-      },
-    },
-    {
-      id: "3",
-      data: "This is test message3!",
-      member: {
-        id: "3",
-        clientData: {
-          color: "green",
-          username: "sky",
-        },
-      },
-    },
-  ]);
-
-  
-  const [me, setMe] = useState({
-    username: randomName(),
-    color: randomColor(),
-  });
+  const [messages, setMessages] = useState([]);
   const handleUserClick = (userId) => {
     // Handle user click, for example, navigate to user profile page
     navigate(`/${userId}`);
@@ -492,12 +285,12 @@ export default function UserMenu() {
                 subheader={<li />}
               >
                 {searchedResult.map((result) => (
-              <SearchResultItem
-                key={result.userId}
-                result={result}
-                onUserClick={handleUserClick}
-              />
-            ))}
+                  <SearchResultItem
+                    key={result.userId}
+                    result={result}
+                    onUserClick={handleUserClick}
+                  />
+                ))}
               </List>
             )}
           </Box>
@@ -538,11 +331,11 @@ export default function UserMenu() {
         open={true}
       >
         <List>
-          {navItems.map(({ userId, message }) => {
-            const lcText = userId.toLowerCase();
+          {navItems.map(({ id, messages, receiverId, senderId, _id }) => {
+            const lcText = _id.toLowerCase();
             return (
               <ListItem
-                key={userId}
+                key={_id}
                 disablePadding
                 sx={{
                   backgroundColor:
@@ -559,20 +352,20 @@ export default function UserMenu() {
                   }}
                 >
                   <ListItemText
-                    primaryTypographyProps={{ variant: "h3" }}
+                    primaryTypographyProps={{ variant: "h4" }}
                     primary={
-                      userId.length > 30
-                        ? `${userId.substring(0, 20)}...`
-                        : userId
+                      senderId !== `${localStorage.getItem("UserId")}`
+                        ? `${receiverId.substring(0, 20)}...`
+                        : `${senderId.substring(0, 20)}...`
                     }
                   />
                   <ListItemText
                     primaryTypographyProps={{ variant: "h5" }}
-                    primary={
-                      message.length > 40
-                        ? `${message.substring(0, 20)}...`
-                        : message
-                    }
+                    // primary={
+                    //   message.length > 40
+                    //     ? `${message.substring(0, 20)}...`
+                    //     : message
+                    // }
                   />
                   {active === lcText && (
                     <MenuOutlinedIcon sx={{ ml: "auto" }} />
@@ -589,7 +382,7 @@ export default function UserMenu() {
         spacing={1}
       >
         <div className={styled.appContent}>
-          <Messages messages={messages} me={me} />
+          <Messages messages={messages} />
         </div>
       </Stack>
       <Stack direction="row" spacing={0.5}>
@@ -625,4 +418,4 @@ export default function UserMenu() {
       </Stack>
     </Box>
   );
-        };
+}
