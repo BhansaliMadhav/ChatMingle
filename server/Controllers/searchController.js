@@ -1,6 +1,6 @@
 import User from "../Models/User.js";
 import Chat from "../Models/userchat.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import ChatSchema from "../Models/chatModel.js";
 import mongoose from "mongoose";
 import userKeySchema from "../Models/userKey.js";
