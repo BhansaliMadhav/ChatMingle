@@ -1,39 +1,43 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
-  TextInput,
   useColorScheme,
+  TextInput,
   View,
   TouchableHighlight,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useState} from 'react';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {BASE_URL} from '@env';
-function LoginPage({navigation}) {
+function SignIn({navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
     flex: 1,
   };
-  async function Login(email, password, navigation) {
+  const [email, setEmail] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState('');
+  const [display, setDisplay] = useState('none');
+  const userId = AsyncStorage.getItem('userId');
+  const toggleDisplay = () => {
+    setDisplay(display === 'flex' ? 'none' : 'flex');
+  };
+  async function RecieveOtp(email, otp, navigation) {
     console.log('triggered login');
     console.log('URL', BASE_URL);
     try {
-      const response = await fetch(BASE_URL + '/user/login', {
+      const response = await fetch(BASE_URL + '/signIn/verify-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email,
-          password,
+          otp,
         }),
       });
 
@@ -54,7 +58,6 @@ function LoginPage({navigation}) {
       alert('An error occurred. Please try again.');
     }
   }
-
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
@@ -72,18 +75,8 @@ function LoginPage({navigation}) {
               },
               styles.Heading,
             ]}>
-            Welcome to Chat Mingle
+            Sign In Page
           </Text>
-          <Text
-            style={[
-              {
-                color: `${isDarkMode ? Colors.lighter : Colors.lighter}`,
-              },
-              styles.SubHeading,
-            ]}>
-            Login To Start Using The App
-          </Text>
-
           <TextInput
             placeholder="Email"
             style={[
@@ -96,21 +89,39 @@ function LoginPage({navigation}) {
             defaultValue={email}
           />
           <TextInput
-            placeholder="Password"
+            placeholder="Otp"
             secureTextEntry
+            // tvParallaxShiftDistanceX={100}
             style={[
-              styles.InputBox,
-              {borderColor: `${isDarkMode ? Colors.lighter : Colors.darker}`},
+              {
+                borderColor: `${isDarkMode ? Colors.lighter : Colors.darker}`,
+                display: `${display}`,
+                paddingLeft: `${display === 'flex' ? 20 : undefined}`,
+                borderRadius: 12,
+                borderWidth: 2,
+                width: 300,
+                aspectRatio: 11 / 2,
+                marginTop: 20,
+              },
             ]}
             onChangeText={newText => {
-              setPassword(newText);
+              setOtp(newText);
             }}
-            defaultValue={password}
+            defaultValue={otp}
           />
         </View>
         <View style={styles.Flex}>
           <TouchableHighlight
-            onPress={() => Login(email, password, navigation)}
+            onPress={
+              !otpSent
+                ? () => {
+                    setOtpSent(true);
+                    if (display === 'none') {
+                      toggleDisplay();
+                    }
+                  }
+                : () => RecieveOtp(email, otp)
+            }
             style={[
               styles.LoginButton,
               {
@@ -125,16 +136,16 @@ function LoginPage({navigation}) {
                   color: `${isDarkMode ? Colors.darker : Colors.lighter}`,
                 },
               ]}>
-              Login
+              {otpSent ? 'Verify Otp' : 'Get Otp'}
             </Text>
           </TouchableHighlight>
           <Text
-            onPress={() => navigation.navigate('SignIn')}
+            onPress={() => navigation.navigate('LoginPage')}
             style={[
               styles.SignInText,
               {color: `${isDarkMode ? '#cccccc' : '#333333'}`},
             ]}>
-            New User? Sign In
+            Already have an account ? Login
           </Text>
         </View>
       </ScrollView>
@@ -184,4 +195,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginPage;
+export default SignIn;
