@@ -25,6 +25,15 @@ function LoginPage({navigation}) {
   async function Login(email, password, navigation) {
     console.log('triggered login');
     console.log('URL', BASE_URL);
+    console.log('email', email);
+    console.log('password', password);
+    console.log(
+      'JSON',
+      JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    );
     try {
       const response = await fetch(BASE_URL + '/user/login', {
         method: 'POST',
@@ -32,8 +41,8 @@ function LoginPage({navigation}) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email,
-          password,
+          email: email,
+          password: password,
         }),
       });
 
