@@ -13,8 +13,9 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useState} from 'react';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {BASE_URL} from '@env';
+
 function LoginPage({navigation}) {
+  const BASE_URL = process.env.BASE_URL;
   const isDarkMode = useColorScheme() === 'dark';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

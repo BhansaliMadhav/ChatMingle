@@ -14,6 +14,8 @@
     "@react-native-async-storage/async-storage": "^1.22.3",
     "@react-navigation/native": "^6.1.12",
     "@react-navigation/native-stack": "^6.9.20",
+    "dotenv": "^16.4.5",
+    "metro-react-native-babel-preset": "^0.77.0",
     "node": "^18.19.1",
     "react": "18.2.0",
     "react-native": "0.73.4",
