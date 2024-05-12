@@ -59,6 +59,7 @@ export const login = async (req, res) => {
     }
   }
 };
+
 export const verify = async (req, res) => {
   const { token, userId } = req.body;
   console.log(token);

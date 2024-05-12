@@ -1,11 +1,11 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const messageSchema = new Schema(
   {
     sender: { type: Schema.Types.ObjectId, ref: "User" }, // userId of the sender
     receiver: { type: Schema.Types.ObjectId, ref: "User" },
-    chat: { type: Schema.Types.ObjectId, ref: "Chat" }, // chatId where the message belongs
+    chat: { type: Schema.Types.ObjectId, ref: "user-chat" }, // chatId where the message belongs
     content: { type: String, required: true },
 
     // Other message fields...
