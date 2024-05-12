@@ -1,17 +1,14 @@
 import mongoose from "mongoose";
-const chatId = {
-  type: String,
-  required: true,
-  default: null,
-};
+
 const userChat = new mongoose.Schema(
   {
-    chatIds: [chatId],
     userId: {
       type: String,
       required: true,
       unique: true,
     },
+    users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
   },
   { timestamps: true, collection: "user-chat" }
 );

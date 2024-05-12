@@ -7,7 +7,12 @@ const userKey = new mongoose.Schema(
       trim: true,
       unique: true,
     },
-    secretKey: {
+    publicKey: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    privateKey: {
       type: String,
       required: true,
       unique: true,

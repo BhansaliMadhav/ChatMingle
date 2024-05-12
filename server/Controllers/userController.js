@@ -86,14 +86,22 @@ export const verify = async (req, res) => {
 
 export const register = async (req, res) => {
   const { name, email, password, fingerprint } = req.body;
-  // console.log(name);
+  console.log(req.body);
+  // Generate a new secret key for the user
+  if (!name || !email || !password || !fingerprint) {
+    console.log("Data required");
+    throw new Error("Missing required fields.");
+  }
+
   // Generate a new secret key for the user
   const secret = speakeasy.generateSecret({ length: 20 });
 
+  // Encrypt the password
   const encryptedPassword = await bcryptjs.hash(password, 10);
+
   // Save the user data in the database
   const user = await User.create({
-    name,
+    name: name,
     userId: email,
     password: encryptedPassword,
     secret: secret.base32,
@@ -112,11 +120,33 @@ export const register = async (req, res) => {
       console.error(err);
       return res.status(500).send("Internal Server Error");
     }
-    const secretKey = crypto.randomBytes(64).toString("base64");
-    if (secretKey) {
+    const { privateKey, publicKey } = crypto.generateKeyPairSync("rsa", {
+      modulusLength: 2048,
+      publicKeyEncoding: {
+        type: "spki",
+        format: "pem",
+      },
+      privateKeyEncoding: {
+        type: "pkcs8",
+        format: "pem",
+      },
+    });
+
+    // Convert keys to strings
+    const privateKeyString = privateKey.toString();
+    const publicKeyString = publicKey.toString();
+
+    console.log("Private Key:");
+    console.log(privateKeyString);
+
+    console.log("\nPublic Key:");
+    console.log(publicKeyString);
+    // console.log(keyCombo.publicKey);
+    if (privateKey && publicKey) {
       await userKey.create({
         userId: user.userId,
-        secretKey,
+        publicKey: publicKey,
+        privateKey: privateKey,
       });
     }
     if (user.userId) {
