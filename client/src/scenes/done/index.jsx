@@ -100,10 +100,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+
+
 const SearchResultItem = ({ result, onUserClick }) => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
+  
   const handleItemClick = async () => {
     const userId = localStorage.getItem("userId");
     try {

@@ -36,7 +36,40 @@ const TOTP = () => {
     if (data.message === "Successfull") {
       // alert("Login Successful");
       localStorage.setItem("tokenCode", data.tokenCode);
-      localStorage.setItem("privateKey", data.privateKey);
+      // localStorage.setItem("privateKey", data.privateKey);
+      const textEncoder = new TextEncoder();
+      const encodedData = textEncoder.encode(data.privateKey);
+      const secureKey = await window.crypto.subtle.generateKey(
+        {
+          name: "AES-GCM",
+          length: 256,
+        },
+        true,
+        ["encrypt", "decrypt"]
+      );
+      const iv = window.crypto.getRandomValues(new Uint8Array(12));
+      const encryptedData = await window.crypto.subtle.encrypt(
+        {
+          name: "AES-GCM",
+          length: 256,
+          iv: iv,
+        },
+        secureKey,
+        encodedData
+      );
+      const decryptedData = await window.crypto.subtle.decrypt(
+        {
+          name: "AES-GCM",
+          length: 256,
+          iv: iv,
+        },
+        secureKey,
+        encryptedData
+      );
+      const decryptedText = new TextDecoder().decode(decryptedData);
+      sessionStorage.setItem("decryptedKey", decryptedText);
+      console.log(decryptedText);
+      sessionStorage.setItem("privateKey", encryptedData);
       console.log("triggered success");
       navigate("/done");
     } else {

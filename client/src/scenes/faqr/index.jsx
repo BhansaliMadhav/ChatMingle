@@ -42,7 +42,24 @@ const QRFA = () => {
     );
     const data = await response.json();
     if (data.tokenCode) {
-      localStorage.setItem("privateKey", data.privateKey);
+      // localStorage.setItem("privateKey", data.privateKey);
+      const secureKey =await window.crypto.subtle.generateKey(
+        {
+        name:"AES-GCM",
+        length: 256,
+        },
+        true,
+        ["encrypt", "decrypt"]
+        );
+        const encryptedData =await window.crypto.subtle.encrypt(
+          {
+          name: "AES-GCM",
+          iv: window.crypto.getRandomValues(new Uint8Array(12)),
+          },
+          {key:secureKey},
+          {data:data.privateKey}
+          );
+      sessionStorage.setItem("privateKey", encryptedData);    
       localStorage.setItem("tokenCode", data.tokenCode);
       // alert("Login Successful");
       console.log("triggered success");
