@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Box, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import CryptoJS from "crypto-js";
 const TOTP = () => {
   const navigate = useNavigate();
+  const secretKey = process.env.SECRET;
   const userId = localStorage.getItem("userId");
   useEffect(() => {
     const userId = localStorage.getItem("userId");
@@ -47,7 +49,12 @@ const TOTP = () => {
         true,
         ["encrypt", "decrypt"]
       );
+      const encodedSecureKey = textEncoder.encode(secureKey);
+      localStorage.setItem("secureKey", encodedSecureKey);
       const iv = window.crypto.getRandomValues(new Uint8Array(12));
+      const encodedIv = textEncoder.encode(iv);
+      const encryptedIv = CryptoJS.AES.encrypt(encodedIv, secretKey);
+      sessionStorage.setItem("encryptedIv", encryptedIv);
       const encryptedData = await window.crypto.subtle.encrypt(
         {
           name: "AES-GCM",
@@ -57,6 +64,7 @@ const TOTP = () => {
         secureKey,
         encodedData
       );
+
       const decryptedData = await window.crypto.subtle.decrypt(
         {
           name: "AES-GCM",

@@ -35,10 +35,30 @@ import { tokens } from "../../theme";
 
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
-
+import CryptoJS from "crypto-js";
 import Messages from "./chatComponent/messages.js";
 var drawerWidth = 350;
 var navItems = [];
+
+async function getKey() {
+  const secureKey = sessionStorage.getItem("secureKey");
+  const encryptedData = sessionStorage.getItem("privateKey");
+  const encryptedIv = sessionStorage.getItem("encryptedIv");
+  const secretKey = process.env.SECRET;
+  const iv = CryptoJS.AES.decrypt(encryptedIv, secretKey);
+  const decryptedData = await window.crypto.subtle.decrypt(
+    {
+      name: "AES-GCM",
+      length: 256,
+      iv: iv,
+    },
+    secureKey,
+    encryptedData
+  );
+  const decryptedText = new TextDecoder().decode(decryptedData);
+  console.log(decryptedText);
+}
+
 const User = ({ userId, name }) => {
   return (
     <li>
@@ -100,12 +120,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-
-
 const SearchResultItem = ({ result, onUserClick }) => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  
+
   const handleItemClick = async () => {
     const userId = localStorage.getItem("userId");
     try {
@@ -173,6 +191,7 @@ export default function UserMenu() {
     }
   };
   useEffect(() => {
+    getKey();
     const userId = localStorage.getItem("userId");
     const tokenCode = localStorage.getItem("tokenCode");
     const user = jwt.decode(tokenCode);
@@ -182,6 +201,7 @@ export default function UserMenu() {
     }
   });
   const theme = useTheme();
+
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const { pathname } = useLocation();
