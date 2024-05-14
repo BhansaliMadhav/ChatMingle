@@ -81,7 +81,12 @@ export const verify = async (req, res) => {
       },
       process.env.SECRET
     );
-    res.status(200).send({ message: "Successfull", tokenCode: tokenCode });
+    const userKeys = await userKey.findOne({ userId: user.userId });
+    res.status(200).send({
+      message: "Successfull",
+      tokenCode: tokenCode,
+      privateKey: userKeys.privateKey,
+    });
   }
 };
 
@@ -109,18 +114,22 @@ export const register = async (req, res) => {
     fingerprint,
   });
 
+  console.log("User Created");
+
   const tokenCode = sign(
     {
       userId: user.userId,
     },
     process.env.SECRET
   );
+  console.log("Token created");
   // Generate a QR code for the user to scan
   QRCode.toDataURL(secret.otpauth_url, async (err, image_data) => {
     if (err) {
       console.error(err);
       return res.status(500).send("Internal Server Error");
     }
+    console.log("QRCode created");
     const { privateKey, publicKey } = crypto.generateKeyPairSync("rsa", {
       modulusLength: 2048,
       publicKeyEncoding: {
@@ -132,7 +141,7 @@ export const register = async (req, res) => {
         format: "pem",
       },
     });
-
+    console.log("Keys created");
     // Convert keys to strings
     const privateKeyString = privateKey.toString();
     const publicKeyString = publicKey.toString();
@@ -144,12 +153,14 @@ export const register = async (req, res) => {
     console.log(publicKeyString);
     // console.log(keyCombo.publicKey);
     if (privateKey && publicKey) {
-      await userKey.create({
+      const keys = await userKey.create({
         userId: user.userId,
         publicKey: publicKey,
         privateKey: privateKey,
       });
+      console.log("Keys saved to db");
     }
+
     if (user.userId) {
       await userChat.create({ userId: user.userId });
     }
@@ -185,5 +196,8 @@ export const totpSignIn = async (req, res) => {
     },
     process.env.SECRET
   );
-  res.status(200).send({ tokenCode: tokenCode });
+  const userKeys = await userKey.findOne({ userId: user.userId });
+  res
+    .status(200)
+    .send({ tokenCode: tokenCode, privateKey: userKeys.privateKey });
 };

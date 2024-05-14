@@ -9,7 +9,7 @@ const TOTP = () => {
     if (!userId) {
       navigate("/login");
     }
-  }, []);
+  });
   const [token, setToken] = useState("");
   useEffect(() => {
     if (token.length === 6) {
@@ -36,6 +36,7 @@ const TOTP = () => {
     if (data.message === "Successfull") {
       // alert("Login Successful");
       localStorage.setItem("tokenCode", data.tokenCode);
+      localStorage.setItem("privateKey", data.privateKey);
       console.log("triggered success");
       navigate("/done");
     } else {

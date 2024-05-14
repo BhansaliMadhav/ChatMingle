@@ -42,7 +42,7 @@ const QRFA = () => {
     );
     const data = await response.json();
     if (data.tokenCode) {
-      localStorage.setItem("user", data.user);
+      localStorage.setItem("privateKey", data.privateKey);
       localStorage.setItem("tokenCode", data.tokenCode);
       // alert("Login Successful");
       console.log("triggered success");
