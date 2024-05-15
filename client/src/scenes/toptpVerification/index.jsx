@@ -39,45 +39,8 @@ const TOTP = () => {
       // alert("Login Successful");
       localStorage.setItem("tokenCode", data.tokenCode);
       // localStorage.setItem("privateKey", data.privateKey);
-      const textEncoder = new TextEncoder();
-      const encodedData = textEncoder.encode(data.privateKey);
-      const secureKey = await window.crypto.subtle.generateKey(
-        {
-          name: "AES-GCM",
-          length: 256,
-        },
-        true,
-        ["encrypt", "decrypt"]
-      );
-      const encodedSecureKey = textEncoder.encode(secureKey);
-      localStorage.setItem("secureKey", encodedSecureKey);
-      const iv = window.crypto.getRandomValues(new Uint8Array(12));
-      const encodedIv = textEncoder.encode(iv);
-      const encryptedIv = CryptoJS.AES.encrypt(encodedIv, secretKey);
-      sessionStorage.setItem("encryptedIv", encryptedIv);
-      const encryptedData = await window.crypto.subtle.encrypt(
-        {
-          name: "AES-GCM",
-          length: 256,
-          iv: iv,
-        },
-        secureKey,
-        encodedData
-      );
-
-      const decryptedData = await window.crypto.subtle.decrypt(
-        {
-          name: "AES-GCM",
-          length: 256,
-          iv: iv,
-        },
-        secureKey,
-        encryptedData
-      );
-      const decryptedText = new TextDecoder().decode(decryptedData);
-      sessionStorage.setItem("decryptedKey", decryptedText);
-      console.log(decryptedText);
-      sessionStorage.setItem("privateKey", encryptedData);
+      const encryptedKey = CryptoJS.AES.encrypt(data.privateKey, userId);
+      localStorage.setItem("encryptedKey", encryptedKey);
       console.log("triggered success");
       navigate("/done");
     } else {

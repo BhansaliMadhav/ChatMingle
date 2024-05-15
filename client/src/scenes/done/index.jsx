@@ -40,25 +40,6 @@ import Messages from "./chatComponent/messages.js";
 var drawerWidth = 350;
 var navItems = [];
 
-async function getKey() {
-  const secureKey = sessionStorage.getItem("secureKey");
-  const encryptedData = sessionStorage.getItem("privateKey");
-  const encryptedIv = sessionStorage.getItem("encryptedIv");
-  const secretKey = process.env.SECRET;
-  const iv = CryptoJS.AES.decrypt(encryptedIv, secretKey);
-  const decryptedData = await window.crypto.subtle.decrypt(
-    {
-      name: "AES-GCM",
-      length: 256,
-      iv: iv,
-    },
-    secureKey,
-    encryptedData
-  );
-  const decryptedText = new TextDecoder().decode(decryptedData);
-  console.log(decryptedText);
-}
-
 const User = ({ userId, name }) => {
   return (
     <li>
@@ -191,14 +172,18 @@ export default function UserMenu() {
     }
   };
   useEffect(() => {
-    getKey();
     const userId = localStorage.getItem("userId");
     const tokenCode = localStorage.getItem("tokenCode");
     const user = jwt.decode(tokenCode);
+
     if (!user || !tokenCode) {
       localStorage.removeItem("tokenCode");
       navigate("/login");
     }
+    // code to decrypt the privateKey
+    // const encryptedkey = localStorage.getItem("encryptedKey");
+    // const decryptedKey = CryptoJS.AES.decrypt(encryptedkey, user.userId);
+    // const decryptedString = CryptoJS.enc.Utf8.stringify(decryptedKey);
   });
   const theme = useTheme();
 

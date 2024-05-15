@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import jwt from "jsonwebtoken";
+import CryptoJS from "crypto-js";
 const QRFA = () => {
   const qr = localStorage.getItem("qr");
   const navigate = useNavigate();
@@ -41,25 +42,11 @@ const QRFA = () => {
       }
     );
     const data = await response.json();
-    if (data.tokenCode) {
+    if (data.tokenCode && data.privateKey) {
       // localStorage.setItem("privateKey", data.privateKey);
-      const secureKey =await window.crypto.subtle.generateKey(
-        {
-        name:"AES-GCM",
-        length: 256,
-        },
-        true,
-        ["encrypt", "decrypt"]
-        );
-        const encryptedData =await window.crypto.subtle.encrypt(
-          {
-          name: "AES-GCM",
-          iv: window.crypto.getRandomValues(new Uint8Array(12)),
-          },
-          {key:secureKey},
-          {data:data.privateKey}
-          );
-      sessionStorage.setItem("privateKey", encryptedData);    
+      const user = jwt.decode(data.tokenCode);
+      const encryptedKey = CryptoJS.AES.encrypt(data.privateKey, user.userId);
+      localStorage.setItem("encryptedKey", encryptedKey);
       localStorage.setItem("tokenCode", data.tokenCode);
       // alert("Login Successful");
       console.log("triggered success");
